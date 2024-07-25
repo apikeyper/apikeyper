@@ -32,25 +32,44 @@ var (
 	dbInstance       *service
 )
 
-func New() Service {
-	// Reuse Connection
-	if dbInstance != nil {
-		return dbInstance
-	}
-
+func SetupDb(dbUri string) *gorm.DB {
+	// Setup database
+	log.Fatal(dbUri)
 	db, err := gorm.Open(sqlite.New(sqlite.Config{
 		DriverName: "libsql",
-		DSN:        fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken),
+		DSN:        dbUri,
 	}), &gorm.Config{})
-
-	// Migrate the schema
-	db.AutoMigrate(&ApiKey{})
 
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
 		log.Fatal(err)
 	}
+
+	// Migrate the schema
+	db.AutoMigrate(&ApiKey{})
+
+	return db
+}
+
+func New() Service {
+	// Reuse Connection
+	if dbInstance != nil {
+		return dbInstance
+	}
+
+	var env = os.Getenv("APP_ENV")
+
+	var dbUri string
+	if env == "local" {
+		dbUri = "file::memory:?cache=shared"
+	} else {
+		dbUri = fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken)
+	}
+
+	log.Default().Println("Connecting to database:", dbUri)
+
+	db := SetupDb(dbUri)
 
 	dbInstance = &service{
 		db: db,

@@ -11,7 +11,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Get("/health", s.healthHandler)
+	r.Get("/health", s.HealthHandler)
 
 	// Api Key
 	r.Post("/apiKey", s.CreateApiKeyHandler)

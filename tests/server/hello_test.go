@@ -9,10 +9,17 @@ import (
 )
 
 func TestHandler(t *testing.T) {
+	t.Log("creating server")
 	s := &server.Server{}
-	server := httptest.NewServer(http.HandlerFunc(s.HelloWorldHandler))
+
+	server := httptest.NewServer(http.HandlerFunc(s.HealthHandler))
+
 	defer server.Close()
+
+	t.Log(server.URL)
+
 	resp, err := http.Get(server.URL)
+
 	if err != nil {
 		t.Fatalf("error making request to server. Err: %v", err)
 	}

@@ -8,7 +8,14 @@ import (
 
 type ApiKey struct {
 	gorm.Model
-	KeyId     string
-	KeyHash   string
-	CreatedAt time.Time
+	KeyId       string  `json:"apiKeyId" gorm:"primaryKey"`
+	ApiId       string  `json:"apiId"`
+	WorkspaceId string  `json:"workspaceId"`
+	HashedKey   string  `json:"-"`            // Store hashed key securely
+	ApiKey      string  `json:"key" gorm:"-"` // Not used, store hashed key instead
+	Name        *string `json:"name,omitempty"`
+	Prefix      *string `json:"prefix,omitempty"`
+	// Roles            []string  `json:"roles,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
