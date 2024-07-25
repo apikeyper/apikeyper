@@ -5,6 +5,7 @@ import (
 	"keyify/internal/database"
 	"keyify/internal/database/utils"
 	"keyify/internal/schemas"
+	"log"
 	"net/http"
 	"time"
 )
@@ -31,7 +32,13 @@ func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:   time.Now(),
 	}
 
-	s.db.CreateApiKey(apiKeyRow)
+	log.Print("1")
+
+	log.Print(apiKeyRow)
+
+	s.Db.CreateApiKey(apiKeyRow)
+
+	log.Print("2")
 
 	w.WriteHeader(http.StatusCreated)
 

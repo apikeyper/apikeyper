@@ -1,6 +1,7 @@
 package apikey_test
 
 import (
+	"keyify/internal/database"
 	"keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
@@ -11,7 +12,9 @@ import (
 
 func TestCreateApiKey(t *testing.T) {
 	// Create a new service
-	s := &server.Server{}
+	s := &server.Server{
+		Db: database.New(),
+	}
 
 	server := httptest.NewServer(http.HandlerFunc(s.CreateApiKeyHandler))
 

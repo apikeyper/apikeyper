@@ -32,11 +32,9 @@ var (
 	dbInstance       *service
 )
 
-func SetupDb(dbUri string) *gorm.DB {
-	// Setup database
-	log.Fatal(dbUri)
+func SetupDb(dbDriver string, dbUri string) *gorm.DB {
 	db, err := gorm.Open(sqlite.New(sqlite.Config{
-		DriverName: "libsql",
+		DriverName: dbDriver,
 		DSN:        dbUri,
 	}), &gorm.Config{})
 
@@ -60,16 +58,17 @@ func New() Service {
 
 	var env = os.Getenv("APP_ENV")
 
+	var dbDriver string
 	var dbUri string
 	if env == "local" {
+		dbDriver = "sqlite3"
 		dbUri = "file::memory:?cache=shared"
 	} else {
+		dbDriver = "libsql"
 		dbUri = fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken)
 	}
 
-	log.Default().Println("Connecting to database:", dbUri)
-
-	db := SetupDb(dbUri)
+	db := SetupDb(dbDriver, dbUri)
 
 	dbInstance = &service{
 		db: db,
