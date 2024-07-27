@@ -28,7 +28,5 @@ func TestCreateApiKey(t *testing.T) {
 	defer resp.Body.Close()
 
 	// Assertions
-	t.Log(resp)
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
-
 }

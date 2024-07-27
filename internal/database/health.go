@@ -17,8 +17,10 @@ func (s *service) Health() map[string]string {
 
 	stats := make(map[string]string)
 
+	dbDriver, dbUri := GetDbConfig()
+
 	// Ping the database
-	db, _ := sql.Open("sqlite3", tursoDbUrl)
+	db, _ := sql.Open(dbDriver, dbUri)
 
 	err := db.PingContext(ctx)
 	if err != nil {

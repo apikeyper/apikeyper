@@ -2,6 +2,7 @@ package tests
 
 import (
 	"io"
+	"keyify/internal/database"
 	"keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
@@ -9,14 +10,13 @@ import (
 )
 
 func TestHandler(t *testing.T) {
-	t.Log("creating server")
-	s := &server.Server{}
+	s := &server.Server{
+		Db: database.New(),
+	}
 
 	server := httptest.NewServer(http.HandlerFunc(s.HealthHandler))
 
 	defer server.Close()
-
-	t.Log(server.URL)
 
 	resp, err := http.Get(server.URL)
 
@@ -28,7 +28,7 @@ func TestHandler(t *testing.T) {
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("expected status OK; got %v", resp.Status)
 	}
-	expected := "{\"message\":\"Hello World\"}"
+	expected := "{\"idle\":\"1\",\"in_use\":\"0\",\"max_idle_closed\":\"0\",\"max_lifetime_closed\":\"0\",\"message\":\"It's healthy\",\"open_connections\":\"1\",\"status\":\"up\",\"wait_count\":\"0\",\"wait_duration\":\"0s\"}"
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("error reading response body. Err: %v", err)

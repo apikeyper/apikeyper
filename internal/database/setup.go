@@ -12,21 +12,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// Service represents a service that interacts with a database.
-type Service interface {
-	// Health returns a map of health status information.
-	// The keys and values in the map are service-specific.
-	Health() map[string]string
-
-	// Create api key
-	CreateApiKey(apiKey *ApiKey) string
-}
-
-type service struct {
-	db *gorm.DB
-}
-
 var (
+	appEnv           = os.Getenv("APP_ENV")
 	tursoDbUrl       = os.Getenv("TURSO_DATABASE_URL")
 	tursoDbAuthToken = os.Getenv("TURSO_AUTH_TOKEN")
 	dbInstance       *service
@@ -50,17 +37,10 @@ func SetupDb(dbDriver string, dbUri string) *gorm.DB {
 	return db
 }
 
-func New() Service {
-	// Reuse Connection
-	if dbInstance != nil {
-		return dbInstance
-	}
-
-	var env = os.Getenv("APP_ENV")
-
+func GetDbConfig() (string, string) {
 	var dbDriver string
 	var dbUri string
-	if env == "local" {
+	if appEnv == "test" {
 		dbDriver = "sqlite3"
 		dbUri = "file::memory:?cache=shared"
 	} else {
@@ -68,10 +48,5 @@ func New() Service {
 		dbUri = fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken)
 	}
 
-	db := SetupDb(dbDriver, dbUri)
-
-	dbInstance = &service{
-		db: db,
-	}
-	return dbInstance
+	return dbDriver, dbUri
 }
