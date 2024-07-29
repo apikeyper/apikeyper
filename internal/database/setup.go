@@ -32,7 +32,13 @@ func SetupDb(dbDriver string, dbUri string) *gorm.DB {
 	}
 
 	// Migrate the schema
-	db.AutoMigrate(&ApiKey{})
+	db.AutoMigrate(
+		// &User{},
+		&Workspace{},
+		&RootKey{},
+		&Api{},
+		&ApiKey{},
+	)
 
 	return db
 }
@@ -43,6 +49,9 @@ func GetDbConfig() (string, string) {
 	if appEnv == "test" {
 		dbDriver = "sqlite3"
 		dbUri = "file::memory:?cache=shared"
+	} else if appEnv == "local" {
+		dbDriver = "libsql"
+		dbUri = "file:test.db"
 	} else {
 		dbDriver = "libsql"
 		dbUri = fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken)

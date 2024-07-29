@@ -13,8 +13,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Get("/health", s.HealthHandler)
 
+	// RootKey FIXME: Add JWT auth
+	r.Post("/rootKey", s.CreateRootKeyHandler)
+
+	// Protected routes
+	// Api
+	r.Post("/api", Auth(s.Db, s.CreateApiHandler))
+
 	// Api Key
-	r.Post("/apiKey", s.CreateApiKeyHandler)
+	r.Post("/apiKey", Auth(s.Db, s.CreateApiKeyHandler))
 
 	return r
 }

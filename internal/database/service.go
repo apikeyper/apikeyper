@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/google/uuid"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
@@ -10,11 +11,18 @@ import (
 // Service represents a service that interacts with a database.
 type Service interface {
 	// Health returns a map of health status information.
-	// The keys and values in the map are service-specific.
 	Health() map[string]string
 
-	// Create api key
-	CreateApiKey(apiKey *ApiKey) string
+	// RootKey
+	CreateRootKey(rootKey *RootKey) uuid.UUID
+	FetchRootKey(rootHashedKey string) *RootKey
+
+	// Api
+	CreateApi(api *Api) uuid.UUID
+	FetchApi(apiId uuid.UUID) (*Api, error)
+
+	// ApiKey
+	CreateApiKey(apiKey *ApiKey) uuid.UUID
 }
 
 type service struct {
