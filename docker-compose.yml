@@ -1,0 +1,38 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: db-local
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+    user: postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5438:5432'
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d  # Mount the initdb scripts
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # keyify-api:
+  #   build: .
+  #   container_name: keyify-api
+  #   ports:
+  #     - '8080:8080'
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+
+
+volumes:
+  dbdata:
