@@ -3,7 +3,6 @@ package database
 import (
 	"github.com/google/uuid"
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"gorm.io/gorm"
 )
@@ -35,9 +34,7 @@ func New() Service {
 		return dbInstance
 	}
 
-	dbDriver, dbUri := GetDbConfig()
-
-	db := SetupDb(dbDriver, dbUri)
+	db := SetupDb()
 
 	dbInstance = &service{
 		db: db,

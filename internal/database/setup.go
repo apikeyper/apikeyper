@@ -6,24 +6,38 @@ import (
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/joho/godotenv"
 )
 
 var (
-	appEnv           = os.Getenv("APP_ENV")
-	tursoDbUrl       = os.Getenv("TURSO_DATABASE_URL")
-	tursoDbAuthToken = os.Getenv("TURSO_AUTH_TOKEN")
-	dbInstance       *service
+	dbInstance *service
+	dbConfig   *DbConfig
 )
 
-func SetupDb(dbDriver string, dbUri string) *gorm.DB {
-	db, err := gorm.Open(sqlite.New(sqlite.Config{
-		DriverName: dbDriver,
-		DSN:        dbUri,
-	}), &gorm.Config{})
+type DbConfig struct {
+	dbUrl  string
+	dbUser string
+	dbPass string
+	dbName string
+	dbPort string
+}
+
+func SetupDb() *gorm.DB {
+
+	dbConfig := GetDbConfig()
+
+	dsn := fmt.Sprintf(
+		"host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/London",
+		dbConfig.dbUser,
+		dbConfig.dbPass,
+		dbConfig.dbName,
+		dbConfig.dbPort,
+	)
+	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{})
 
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
@@ -43,19 +57,31 @@ func SetupDb(dbDriver string, dbUri string) *gorm.DB {
 	return db
 }
 
-func GetDbConfig() (string, string) {
-	var dbDriver string
-	var dbUri string
-	if appEnv == "test" {
-		dbDriver = "sqlite3"
-		dbUri = "file::memory:?cache=shared"
-	} else if appEnv == "local" {
-		dbDriver = "libsql"
-		dbUri = "file:test.db"
-	} else {
-		dbDriver = "libsql"
-		dbUri = fmt.Sprintf("%s?authToken=%s", tursoDbUrl, tursoDbAuthToken)
+func GetDbConfig() *DbConfig {
+
+	if dbConfig != nil {
+		return dbConfig
 	}
 
-	return dbDriver, dbUri
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	var (
+		// appEnv     = os.Getenv("APP_ENV")
+		dbUrl  = os.Getenv("DATABASE_URL")
+		dbUser = os.Getenv("DB_USER")
+		dbPass = os.Getenv("DB_PASS")
+		dbName = os.Getenv("DB_NAME")
+		dbPort = os.Getenv("DB_PORT")
+	)
+
+	return &DbConfig{
+		dbUrl:  dbUrl,
+		dbUser: dbUser,
+		dbPass: dbPass,
+		dbName: dbName,
+		dbPort: dbPort,
+	}
 }

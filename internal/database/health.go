@@ -17,10 +17,12 @@ func (s *service) Health() map[string]string {
 
 	stats := make(map[string]string)
 
-	dbDriver, dbUri := GetDbConfig()
+	dbConfig := GetDbConfig()
+
+	println(dbConfig.dbUrl)
 
 	// Ping the database
-	db, _ := sql.Open(dbDriver, dbUri)
+	db, _ := sql.Open("pgx", dbConfig.dbUrl)
 
 	err := db.PingContext(ctx)
 	if err != nil {
