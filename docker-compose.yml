@@ -22,6 +22,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      keyify: null
 
   keyify-api:
     build: .
@@ -33,8 +35,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      keyify: null
 
 
 
 volumes:
   dbdata:
+
+networks:
+  keyify:
+    name: keyify
