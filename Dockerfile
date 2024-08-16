@@ -15,8 +15,8 @@ RUN apt update && apt install -y ca-certificates
 
 COPY --from=builder /usr/src/app/main /usr/local/bin/main
 
-EXPOSE 3000
+EXPOSE 8080
 
-ENV POST 3000
+ENV PORT 8080
 
 CMD ["/usr/local/bin/main"]
