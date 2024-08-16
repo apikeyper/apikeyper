@@ -33,7 +33,7 @@ services:
     env_file:
       - .env.template
     depends_on:
-      postgres:
+      keyify-db:
         condition: service_healthy
     networks:
       - keyify
