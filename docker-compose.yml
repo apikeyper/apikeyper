@@ -1,8 +1,8 @@
 version: '3'
 services:
-  postgres:
+  keyify-db:
     image: postgres:latest
-    container_name: db-local
+    container_name: keyify-db
     restart: always
     environment:
       - POSTGRES_USER=postgres
