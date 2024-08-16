@@ -13,6 +13,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Get("/health", s.HealthHandler)
 
+	// Workspace
+	r.Post("/workspace", s.CreateWorkspaceHandler)
+
 	// RootKey FIXME: Add JWT auth
 	r.Post("/rootKey", s.CreateRootKeyHandler)
 

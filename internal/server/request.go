@@ -2,6 +2,10 @@ package server
 
 import "github.com/google/uuid"
 
+type CreateWorkspaceRequest struct {
+	Name string `json:"name"`
+}
+
 type CreateRootKeyRequest struct {
 	Name        string    `json:"name"`
 	WorkspaceId uuid.UUID `json:"workspaceId"`

@@ -40,7 +40,11 @@ func (s *Server) CreateRootKeyHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:     time.Now(),
 	}
 
-	s.Db.CreateRootKey(rootKeyRow)
+	_, err = s.Db.CreateRootKey(rootKeyRow)
+	if err != nil {
+		encode(w, r, http.StatusInternalServerError, err)
+		return
+	}
 
 	respBody := CreateRootKeyResponse{
 		RootKey: rootKey,

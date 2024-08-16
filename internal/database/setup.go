@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -14,8 +15,8 @@ import (
 )
 
 var (
-	dbInstance *service
-	dbConfig   *DbConfig
+	dbService *service
+	dbConfig  *DbConfig
 )
 
 type DbConfig struct {
@@ -27,11 +28,12 @@ type DbConfig struct {
 	dbPort string
 }
 
-func SetupDb() *gorm.DB {
+func ParseDbUrl(dbConfig *DbConfig) string {
+	if dbConfig.dbUrl != "" {
+		return dbConfig.dbUrl
+	}
 
-	dbConfig := GetDbConfig()
-
-	dsn := fmt.Sprintf(
+	return fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/London",
 		dbConfig.dbHost,
 		dbConfig.dbUser,
@@ -39,6 +41,12 @@ func SetupDb() *gorm.DB {
 		dbConfig.dbName,
 		dbConfig.dbPort,
 	)
+}
+
+func GetGormDb() *gorm.DB {
+	dbConfig := GetDbConfig()
+
+	dsn := ParseDbUrl(dbConfig)
 	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{})
 
 	if err != nil {
@@ -46,6 +54,13 @@ func SetupDb() *gorm.DB {
 		// another initialization error.
 		log.Fatal(err)
 	}
+
+	return db
+}
+
+func SetupDb() *gorm.DB {
+
+	db := GetGormDb()
 
 	// Migrate the schema
 	db.AutoMigrate(
@@ -67,11 +82,10 @@ func GetDbConfig() *DbConfig {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file to load")
+		slog.Debug("No .env file to load")
 	}
 
 	var (
-		// appEnv     = os.Getenv("APP_ENV")
 		dbUrl  = os.Getenv("DATABASE_URL")
 		dbHost = os.Getenv("DB_HOST")
 		dbUser = os.Getenv("DB_USER")

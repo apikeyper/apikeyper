@@ -6,9 +6,14 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *service) CreateRootKey(rootKey *RootKey) uuid.UUID {
-	s.db.Create(rootKey)
-	return rootKey.ID
+func (s *service) CreateRootKey(rootKey *RootKey) (uuid.UUID, error) {
+	tx := s.db.Create(rootKey)
+	if tx.Error != nil {
+		log.Printf("Error: %v", tx.Error)
+		return uuid.Nil, tx.Error
+	}
+
+	return rootKey.ID, nil
 }
 
 func (s *service) FetchRootKey(rootHashedKey string) *RootKey {

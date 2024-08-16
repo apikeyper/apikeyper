@@ -19,16 +19,16 @@ func (s *service) Health() map[string]string {
 
 	dbConfig := GetDbConfig()
 
-	println(dbConfig.dbUrl)
-
 	// Ping the database
-	db, _ := sql.Open("pgx", dbConfig.dbUrl)
+	dsn := ParseDbUrl(dbConfig)
+
+	db, _ := sql.Open("pgx", dsn)
 
 	err := db.PingContext(ctx)
 	if err != nil {
 		stats["status"] = "down"
 		stats["error"] = fmt.Sprintf("db down: %v", err)
-		log.Fatalf(fmt.Sprintf("db down: %v", err)) // Log the error and terminate the program
+		log.Fatalf("db down: %v", err) // Log the error and terminate the program
 		return stats
 	}
 
