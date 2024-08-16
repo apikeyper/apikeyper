@@ -19,6 +19,7 @@ var (
 )
 
 type DbConfig struct {
+	dbHost string
 	dbUrl  string
 	dbUser string
 	dbPass string
@@ -31,7 +32,8 @@ func SetupDb() *gorm.DB {
 	dbConfig := GetDbConfig()
 
 	dsn := fmt.Sprintf(
-		"host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/London",
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/London",
+		dbConfig.dbHost,
 		dbConfig.dbUser,
 		dbConfig.dbPass,
 		dbConfig.dbName,
@@ -65,12 +67,13 @@ func GetDbConfig() *DbConfig {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("No .env file to load")
 	}
 
 	var (
 		// appEnv     = os.Getenv("APP_ENV")
 		dbUrl  = os.Getenv("DATABASE_URL")
+		dbHost = os.Getenv("DB_HOST")
 		dbUser = os.Getenv("DB_USER")
 		dbPass = os.Getenv("DB_PASS")
 		dbName = os.Getenv("DB_NAME")
@@ -78,6 +81,7 @@ func GetDbConfig() *DbConfig {
 	)
 
 	return &DbConfig{
+		dbHost: dbHost,
 		dbUrl:  dbUrl,
 		dbUser: dbUser,
 		dbPass: dbPass,

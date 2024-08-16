@@ -27,7 +27,9 @@ services:
     build: .
     container_name: keyify-api
     ports:
-      - '8080:8080'
+      - '3000:3000'
+    env_file:
+      - .env.template
     depends_on:
       postgres:
         condition: service_healthy
