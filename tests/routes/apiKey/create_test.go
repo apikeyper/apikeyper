@@ -11,6 +11,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"keyify/tests"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,26 +33,35 @@ func TestCreateApiKey(t *testing.T) {
 
 	defer server.Close()
 
+	// Create a workspace
+	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
+		ID:            uuid.New(),
+		WorkspaceName: "test-workspace",
+	})
+
 	// Create root key
 	rootKey := "test-root-key"
 	s.Db.CreateRootKey(&database.RootKey{
 		ID:            uuid.New(),
+		WorkspaceId:   workspaceId,
 		RootHashedKey: utils.HashString(rootKey),
 	})
 
+	// Create an API
 	apiId := uuid.New()
 	s.Db.CreateApi(&database.Api{
-		ID: apiId,
+		ID:          apiId,
+		WorkspaceId: workspaceId,
 	})
 
 	createApiKeyReq := KeyifyServer.CreateApiKeyRequest{
 		ApiId: apiId,
 	}
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(createApiKeyReq)
+	_ = json.NewEncoder(&buf).Encode(createApiKeyReq)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", server.URL, &buf)
+	req, _ := http.NewRequest("POST", server.URL, &buf)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", rootKey))
 
 	resp, err := client.Do(req)
@@ -62,4 +73,7 @@ func TestCreateApiKey(t *testing.T) {
 
 	// Assertions
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+	// Cleanup db
+	defer tests.CleanupDb()
 }

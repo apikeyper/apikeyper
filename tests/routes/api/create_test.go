@@ -7,6 +7,7 @@ import (
 	"keyify/internal/database"
 	"keyify/internal/database/utils"
 	KeyifyServer "keyify/internal/server"
+	"keyify/tests"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -31,10 +32,17 @@ func TestCreateApiHandler(t *testing.T) {
 
 	defer server.Close()
 
+	// Create a workspace
+	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
+		ID:            uuid.New(),
+		WorkspaceName: "test-workspace",
+	})
+
 	// Create root key
 	rootKey := "test-root-key"
 	s.Db.CreateRootKey(&database.RootKey{
 		ID:            uuid.New(),
+		WorkspaceId:   workspaceId,
 		RootHashedKey: utils.HashString(rootKey),
 	})
 
@@ -42,7 +50,7 @@ func TestCreateApiHandler(t *testing.T) {
 		ApiName: "test-api",
 	}
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(createApiReq)
+	_ = json.NewEncoder(&buf).Encode(createApiReq)
 
 	client := &http.Client{}
 	req, _ := http.NewRequest("POST", server.URL, &buf)
@@ -57,4 +65,7 @@ func TestCreateApiHandler(t *testing.T) {
 
 	// Assertions
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+	// Cleanup db
+	defer tests.CleanupDb()
 }

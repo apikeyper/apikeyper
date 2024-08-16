@@ -12,8 +12,11 @@ type Service interface {
 	// Health returns a map of health status information.
 	Health() map[string]string
 
+	// Workspace
+	CreateWorkspace(workspace *Workspace) uuid.UUID
+
 	// RootKey
-	CreateRootKey(rootKey *RootKey) uuid.UUID
+	CreateRootKey(rootKey *RootKey) (uuid.UUID, error)
 	FetchRootKey(rootHashedKey string) *RootKey
 
 	// Api
@@ -30,14 +33,14 @@ type service struct {
 
 func New() Service {
 	// Reuse Connection
-	if dbInstance != nil {
-		return dbInstance
+	if dbService != nil {
+		return dbService
 	}
 
 	db := SetupDb()
 
-	dbInstance = &service{
+	dbService = &service{
 		db: db,
 	}
-	return dbInstance
+	return dbService
 }

@@ -9,6 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"keyify/tests"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,15 +25,21 @@ func TestCreateRootKeyHandler(t *testing.T) {
 
 	defer server.Close()
 
+	// Create a workspace
+	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
+		ID:            uuid.New(),
+		WorkspaceName: "test-workspace",
+	})
+
 	createRootKeyReq := KeyifyServer.CreateRootKeyRequest{
 		Name:        "test-root-key",
-		WorkspaceId: uuid.New(),
+		WorkspaceId: workspaceId,
 	}
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(createRootKeyReq)
+	_ = json.NewEncoder(&buf).Encode(createRootKeyReq)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", server.URL, &buf)
+	req, _ := http.NewRequest("POST", server.URL, &buf)
 
 	resp, err := client.Do(req)
 
@@ -42,4 +50,7 @@ func TestCreateRootKeyHandler(t *testing.T) {
 
 	// Assertions
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+	// Cleanup db
+	defer tests.CleanupDb()
 }
