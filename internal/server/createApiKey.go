@@ -4,6 +4,7 @@ import (
 	"context"
 	"keyify/internal/database"
 	"keyify/internal/database/utils"
+	"keyify/internal/events"
 	"net/http"
 	"time"
 
@@ -62,7 +63,19 @@ func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: time.Now(),
 	}
 
+	// Create the api key in db
 	_, createErr := s.Db.CreateApiKey(apiKeyRow)
+
+	// Publish an event to the queue
+	go s.Message.Publish(context.Background(), events.EventPayload{
+		EventType: events.API_KEY_CREATED,
+		Data: events.EventData{
+			WorkspaceId: api.WorkspaceId.String(),
+			ApiKeyId:    apiKeyRow.ID.String(),
+			ApiId:       api.ID.String(),
+			EventTime:   time.Now().String(),
+		},
+	})
 
 	if createErr != nil {
 		encode(w, r, http.StatusInternalServerError, "Failed to create api key")

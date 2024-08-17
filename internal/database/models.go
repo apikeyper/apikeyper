@@ -60,3 +60,12 @@ type ApiKey struct {
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
+
+type ApiKeyUsage struct {
+	gorm.Model
+	ID        uuid.UUID `json:"apiKeyUsageId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
+	ApiKeyId  uuid.UUID `json:"apiKeyId"`
+	Usage     string    `json:"usage"` // success, exceeded, rate_limited
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}

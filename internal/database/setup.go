@@ -7,7 +7,6 @@ import (
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -69,6 +68,7 @@ func SetupDb() *gorm.DB {
 		&RootKey{},
 		&Api{},
 		&ApiKey{},
+		&ApiKeyUsage{},
 	)
 
 	return db

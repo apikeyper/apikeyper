@@ -44,3 +44,15 @@ func (s *service) VerifyApiKey(apiKeyHashed string) (*ApiKey, error) {
 	slog.Info(fmt.Sprintf("Verified api key: %v with hashed key: %s", apiKey.ID, apiKeyHashed))
 	return &apiKey, nil
 }
+
+func (s *service) LogApiKeyUsage(apiKeyUsage *ApiKeyUsage) (uuid.UUID, error) {
+	result := s.db.Create(apiKeyUsage)
+
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to log api key usage for api key: %s. Error: %v", apiKeyUsage.ApiKeyId, result.Error))
+		return uuid.Nil, result.Error
+	}
+
+	slog.Info(fmt.Sprintf("Logged api key usage: %v for api key: %s", apiKeyUsage.ID, apiKeyUsage.ApiKeyId))
+	return apiKeyUsage.ID, nil
+}
