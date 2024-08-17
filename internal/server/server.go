@@ -10,16 +10,19 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 
 	"keyify/internal/database"
+	"keyify/internal/events"
 )
 
 type Server struct {
-	Db database.Service
+	Db      database.Service
+	Message events.MessageService
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		Db: database.New(),
+		Db:      database.New(),
+		Message: events.New(),
 	}
 
 	// Declare Server config

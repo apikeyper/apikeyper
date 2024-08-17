@@ -23,6 +23,13 @@ services:
       timeout: 5s
       retries: 5
 
+  keyify-redis:
+    image: redis:latest
+    container_name: keyify-redis
+    restart: always
+    ports:
+      - '6379:6379'
+
   keyify-api:
     build: .
     container_name: keyify-api
@@ -34,6 +41,16 @@ services:
       keyify-db:
         condition: service_healthy
 
+  keyify-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.Worker
+    container_name: keyify-worker
+    env_file:
+      - .env.template
+    depends_on:
+      keyify-db:
+        condition: service_healthy
 
 
 volumes:

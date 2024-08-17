@@ -3,7 +3,6 @@ package database
 import (
 	"github.com/google/uuid"
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"gorm.io/gorm"
 )
 
@@ -28,6 +27,9 @@ type Service interface {
 	CreateApiKey(apiKey *ApiKey) (uuid.UUID, error)
 	FetchApiKeyById(apiKeyId string) (*ApiKey, error)
 	VerifyApiKey(apiKeyHashed string) (*ApiKey, error)
+
+	// ApiKeyUsage
+	LogApiKeyUsage(apiKeyUsage *ApiKeyUsage) (uuid.UUID, error)
 }
 
 type service struct {
