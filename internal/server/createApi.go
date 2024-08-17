@@ -39,7 +39,12 @@ func (s *Server) CreateApiHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:   time.Now(),
 	}
 
-	s.Db.CreateApi(apiRow)
+	_, createErr := s.Db.CreateApi(apiRow)
+
+	if createErr != nil {
+		encode(w, r, http.StatusInternalServerError, "Failed to create api")
+		return
+	}
 
 	respBody := CreateApiResponse{
 		ApiId: apiRow.ID,

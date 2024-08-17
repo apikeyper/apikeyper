@@ -42,7 +42,7 @@ type RootKey struct {
 type Api struct {
 	gorm.Model
 	ID          uuid.UUID `json:"apiId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
-	WorkspaceId uuid.UUID `json:"-"`
+	WorkspaceId uuid.UUID `json:"workspaceId"`
 	ApiKeys     []ApiKey
 	ApiName     string    `json:"apiName"`
 	CreatedAt   time.Time `json:"createdAt"`

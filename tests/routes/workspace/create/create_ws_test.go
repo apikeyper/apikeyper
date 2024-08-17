@@ -11,29 +11,21 @@ import (
 
 	"keyify/tests"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateRootKeyHandler(t *testing.T) {
+func TestCreateWorkspaceHandler(t *testing.T) {
 	// Create a new service
 	s := &KeyifyServer.Server{
 		Db: database.New(),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(s.CreateRootKeyHandler))
+	server := httptest.NewServer(http.HandlerFunc(s.CreateWorkspaceHandler))
 
 	defer server.Close()
 
-	// Create a workspace
-	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
-		ID:            uuid.New(),
-		WorkspaceName: "test-workspace",
-	})
-
-	createRootKeyReq := KeyifyServer.CreateRootKeyRequest{
-		Name:        "test-root-key",
-		WorkspaceId: workspaceId,
+	createRootKeyReq := KeyifyServer.CreateWorkspaceRequest{
+		Name: "test-ws",
 	}
 	var buf bytes.Buffer
 	_ = json.NewEncoder(&buf).Encode(createRootKeyReq)

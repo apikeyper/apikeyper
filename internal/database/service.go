@@ -13,18 +13,21 @@ type Service interface {
 	Health() map[string]string
 
 	// Workspace
-	CreateWorkspace(workspace *Workspace) uuid.UUID
+	CreateWorkspace(workspace *Workspace) (uuid.UUID, error)
 
 	// RootKey
 	CreateRootKey(rootKey *RootKey) (uuid.UUID, error)
-	FetchRootKey(rootHashedKey string) *RootKey
+	FetchRootKey(rootHashedKey string) (*RootKey, error)
 
 	// Api
-	CreateApi(api *Api) uuid.UUID
+	CreateApi(api *Api) (uuid.UUID, error)
 	FetchApi(apiId uuid.UUID) (*Api, error)
+	ListApis(workspaceId uuid.UUID) (*[]Api, error)
 
 	// ApiKey
-	CreateApiKey(apiKey *ApiKey) uuid.UUID
+	CreateApiKey(apiKey *ApiKey) (uuid.UUID, error)
+	FetchApiKeyById(apiKeyId string) (*ApiKey, error)
+	VerifyApiKey(apiKeyHashed string) (*ApiKey, error)
 }
 
 type service struct {

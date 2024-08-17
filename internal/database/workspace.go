@@ -1,8 +1,19 @@
 package database
 
-import "github.com/google/uuid"
+import (
+	"fmt"
+	"log/slog"
 
-func (s *service) CreateWorkspace(workspace *Workspace) uuid.UUID {
-	s.db.Create(workspace)
-	return workspace.ID
+	"github.com/google/uuid"
+)
+
+func (s *service) CreateWorkspace(workspace *Workspace) (uuid.UUID, error) {
+	result := s.db.Create(workspace)
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to create workspace. Error: %v", result.Error))
+		return uuid.Nil, result.Error
+	}
+
+	slog.Info(fmt.Sprintf("Created workspace: %v", workspace.ID))
+	return workspace.ID, nil
 }

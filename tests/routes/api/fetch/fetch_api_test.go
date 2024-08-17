@@ -1,8 +1,6 @@
 package tests
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"keyify/internal/database"
 	"keyify/internal/database/utils"
@@ -16,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateApiHandler(t *testing.T) {
+func TestFetchApiByIdHandler(t *testing.T) {
 	// Create a new service
 	s := &KeyifyServer.Server{
 		Db: database.New(),
@@ -25,7 +23,7 @@ func TestCreateApiHandler(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(
 			KeyifyServer.Auth(
-				s.Db, s.CreateApiHandler,
+				s.Db, s.FetchApiHandler,
 			),
 		),
 	)
@@ -33,7 +31,7 @@ func TestCreateApiHandler(t *testing.T) {
 	defer server.Close()
 
 	// Create a workspace
-	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
+	workspaceId, _ := s.Db.CreateWorkspace(&database.Workspace{
 		ID:            uuid.New(),
 		WorkspaceName: "test-workspace",
 	})
@@ -46,21 +44,23 @@ func TestCreateApiHandler(t *testing.T) {
 		RootHashedKey: utils.HashString(rootKey),
 	})
 
-	createApiReq := KeyifyServer.CreateApiRequest{
-		ApiName: "test-api",
-	}
-	var buf bytes.Buffer
-	_ = json.NewEncoder(&buf).Encode(createApiReq)
+	// Create an API
+	apiId := uuid.New()
+	s.Db.CreateApi(&database.Api{
+		ID:          apiId,
+		WorkspaceId: workspaceId,
+	})
 
 	client := &http.Client{}
-	req, _ := http.NewRequest("POST", server.URL, &buf)
+	url := fmt.Sprintf("%s/api/%s", server.URL, apiId)
+	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", rootKey))
-
 	resp, err := client.Do(req)
 
 	if err != nil {
 		t.Fatalf("error making request to server. Err: %v", err)
 	}
+
 	defer resp.Body.Close()
 
 	// Assertions

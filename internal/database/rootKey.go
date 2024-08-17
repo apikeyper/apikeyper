@@ -1,28 +1,29 @@
 package database
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 
 	"github.com/google/uuid"
 )
 
 func (s *service) CreateRootKey(rootKey *RootKey) (uuid.UUID, error) {
-	tx := s.db.Create(rootKey)
-	if tx.Error != nil {
-		log.Printf("Error: %v", tx.Error)
-		return uuid.Nil, tx.Error
+	result := s.db.Create(rootKey)
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to create root key. Error: %v", result.Error))
+		return uuid.Nil, result.Error
 	}
 
+	slog.Info(fmt.Sprintf("Created root key: %v for workspaceId: %v", rootKey.ID, rootKey.WorkspaceId))
 	return rootKey.ID, nil
 }
 
-func (s *service) FetchRootKey(rootHashedKey string) *RootKey {
+func (s *service) FetchRootKey(rootHashedKey string) (*RootKey, error) {
 	var rootKey RootKey
-	if err := s.db.Where("root_hashed_key = ?", rootHashedKey).First(&rootKey); err.Error != nil {
-		log.Printf("Error: %v", err.Error)
-		return nil
+	if result := s.db.Where("root_hashed_key = ?", rootHashedKey).First(&rootKey); result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to fetch root key. Error: %v", result.Error))
+		return nil, result.Error
 	}
 
-	log.Printf("RootKey: %v", rootKey.RootHashedKey)
-	return &rootKey
+	return &rootKey, nil
 }

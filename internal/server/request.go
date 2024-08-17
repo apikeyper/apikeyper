@@ -22,3 +22,8 @@ type CreateApiKeyRequest struct {
 	Prefix string    `json:"prefix"`
 	Roles  []string  `json:"roles"`
 }
+
+type VerifyApiKeyRequest struct {
+	ApiKey string
+	ApiId  uuid.UUID
+}

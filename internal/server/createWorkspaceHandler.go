@@ -35,7 +35,12 @@ func (s *Server) CreateWorkspaceHandler(w http.ResponseWriter, r *http.Request) 
 		UpdatedAt:     time.Now(),
 	}
 
-	s.Db.CreateWorkspace(workspace)
+	_, createErr := s.Db.CreateWorkspace(workspace)
+
+	if createErr != nil {
+		encode(w, r, http.StatusInternalServerError, "Failed to create workspace")
+		return
+	}
 
 	respBody := CreateWorkspaceResponse{
 		WorkspaceId: workspace.ID,

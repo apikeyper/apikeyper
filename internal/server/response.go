@@ -1,6 +1,10 @@
 package server
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type CreateWorkspaceResponse struct {
 	WorkspaceId uuid.UUID `json:"workspaceId"`
@@ -18,4 +22,18 @@ type CreateKeyResponse struct {
 	ApiId uuid.UUID `json:"apiId"`
 	KeyId uuid.UUID `json:"keyId"`
 	Key   string    `json:"key"`
+}
+
+type FetchApiResponse struct {
+	ApiId       uuid.UUID `json:"apiId"`
+	WorkspaceId uuid.UUID `json:"workspaceId"`
+	ApiName     string    `json:"apiName"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+type VerifyApiKeyResponse struct {
+	KeyId uuid.UUID `json:"keyId"`
+	ApiId uuid.UUID `json:"apiId"`
+	Valid bool      `json:"valid"`
 }

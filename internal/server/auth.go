@@ -38,9 +38,9 @@ func Auth(dbService database.Service, handler http.HandlerFunc) http.HandlerFunc
 		hashedRootKey := utils.HashString(rootKey)
 
 		// Verify the rootKey exists
-		rootKeyRow := dbService.FetchRootKey(hashedRootKey)
+		rootKeyRow, err := dbService.FetchRootKey(hashedRootKey)
 
-		if rootKeyRow == nil {
+		if err != nil {
 			encode(w, r, http.StatusUnauthorized, "Invalid root key")
 			return
 		}

@@ -62,7 +62,12 @@ func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: time.Now(),
 	}
 
-	s.Db.CreateApiKey(apiKeyRow)
+	_, createErr := s.Db.CreateApiKey(apiKeyRow)
+
+	if createErr != nil {
+		encode(w, r, http.StatusInternalServerError, "Failed to create api key")
+		return
+	}
 
 	respBody := CreateKeyResponse{
 		ApiId: api.ID,

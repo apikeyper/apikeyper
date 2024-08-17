@@ -34,7 +34,7 @@ func TestCreateApiKey(t *testing.T) {
 	defer server.Close()
 
 	// Create a workspace
-	workspaceId := s.Db.CreateWorkspace(&database.Workspace{
+	workspaceId, _ := s.Db.CreateWorkspace(&database.Workspace{
 		ID:            uuid.New(),
 		WorkspaceName: "test-workspace",
 	})
