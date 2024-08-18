@@ -7,6 +7,7 @@ env:
   DB_PASS: pass
   DB_NAME: keyify_test
   DB_PORT: 5432
+  REDIS_URL: localhost:6379
 
 
 jobs:
@@ -23,6 +24,10 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v4

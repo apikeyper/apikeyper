@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"keyify/internal/database"
 	"keyify/internal/database/utils"
+	"keyify/internal/events"
 	KeyifyServer "keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
@@ -20,7 +21,8 @@ import (
 func TestCreateApiKey(t *testing.T) {
 	// Create a new service
 	s := &KeyifyServer.Server{
-		Db: database.New(),
+		Db:      database.New(),
+		Message: events.New(),
 	}
 
 	server := httptest.NewServer(
