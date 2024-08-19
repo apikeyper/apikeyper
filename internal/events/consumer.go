@@ -24,19 +24,19 @@ func Consumer(ctx context.Context, config *QueueConfig, consumerName string) {
 	slog.Info(fmt.Sprintf("Starting consumer: %s", consumerName))
 
 	for {
-		result, err := client.BRPop(ctx, 0, config.QueueName).Result()
+		result, err := client.BRPopLPush(ctx, config.QueueName, "tempQ", 0).Result()
+
 		if err != nil {
 			fmt.Printf("[%s] error popping from queue: %v\n", consumerName, err)
 			continue
 		}
-
-		fmt.Printf("[%s] received: %v\n", consumerName, result)
+		slog.Info(fmt.Sprintf("[%s] received: %v\n", consumerName, result))
 
 		// Convert the result to json
 		eventPayload := EventPayload{}
 
 		// Unmarshal the event payload
-		err = json.Unmarshal([]byte(result[1]), &eventPayload)
+		err = json.Unmarshal([]byte(result), &eventPayload)
 
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error unmarshalling event payload: %v", err))
@@ -53,16 +53,22 @@ func Consumer(ctx context.Context, config *QueueConfig, consumerName string) {
 		case API_KEY_RATE_LIMITED:
 			usage = "rate_limited"
 		default:
-			usage = "unknown"
+			slog.Info(fmt.Sprintf("Skipping unknown event type: %v", eventPayload.EventType))
+			client.LRem(ctx, "tempQ", 0, result)
+			continue
 		}
 
 		// Log the API key usage
 		apiKeyId := eventPayload.Data.ApiKeyId
 		apiKeyUsage := database.ApiKeyUsage{
+			ID:       eventPayload.Data.EventId,
 			ApiKeyId: uuid.MustParse(apiKeyId),
 			Usage:    usage,
 		}
 		dbService.LogApiKeyUsage(&apiKeyUsage)
+
+		client.LRem(ctx, "tempQ", 0, result)
+
 		slog.Info(fmt.Sprintf("Processed event: %v", eventPayload.EventType))
 	}
 

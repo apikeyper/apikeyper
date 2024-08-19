@@ -27,6 +27,7 @@ type Service interface {
 	CreateApiKey(apiKey *ApiKey) (uuid.UUID, error)
 	FetchApiKeyById(apiKeyId string) (*ApiKey, error)
 	VerifyApiKey(apiKeyHashed string) (*ApiKey, error)
+	UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error)
 
 	// ApiKeyUsage
 	LogApiKeyUsage(apiKeyUsage *ApiKeyUsage) (uuid.UUID, error)

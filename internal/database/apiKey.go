@@ -41,7 +41,29 @@ func (s *service) VerifyApiKey(apiKeyHashed string) (*ApiKey, error) {
 		return nil, result.Error
 	}
 
-	slog.Info(fmt.Sprintf("Verified api key: %v with hashed key: %s", apiKey.ID, apiKeyHashed))
+	slog.Info(fmt.Sprintf("Fetched api key to verify: %v", apiKey.ID))
+	return &apiKey, nil
+}
+
+func (s *service) UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error) {
+	var apiKey ApiKey
+	result := s.db.Where("id = ?", apiKeyId).First(&apiKey)
+
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to update api key status for api key: %s. Error: %v", apiKeyId, result.Error))
+		return nil, result.Error
+	}
+
+	apiKey.Status = status
+
+	result = s.db.Save(&apiKey)
+
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to update api key status for api key: %s. Error: %v", apiKeyId, result.Error))
+		return nil, result.Error
+	}
+
+	slog.Info(fmt.Sprintf("Updated api key status: %v for api key: %s", status, apiKeyId))
 	return &apiKey, nil
 }
 
