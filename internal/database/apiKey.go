@@ -67,7 +67,7 @@ func (s *service) UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey
 	return &apiKey, nil
 }
 
-func (s *service) LogApiKeyUsage(apiKeyUsage *ApiKeyUsage) (uuid.UUID, error) {
+func (s *service) LogApiKeyUsage(apiKeyUsage *ApiKeyActivity) (uuid.UUID, error) {
 	result := s.db.Create(apiKeyUsage)
 
 	if result.Error != nil {

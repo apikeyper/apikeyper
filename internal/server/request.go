@@ -27,3 +27,8 @@ type VerifyApiKeyRequest struct {
 	ApiKey string
 	ApiId  uuid.UUID
 }
+
+type RevokeApiKeyRequest struct {
+	ApiKey string
+	ApiId  uuid.UUID
+}
