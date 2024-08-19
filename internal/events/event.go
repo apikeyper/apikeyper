@@ -1,5 +1,7 @@
 package events
 
+import "github.com/google/uuid"
+
 type Event string
 
 const (
@@ -15,10 +17,11 @@ const (
 )
 
 type EventData struct {
-	WorkspaceId string `json:"workspace_id"`
-	ApiKeyId    string `json:"api_key_id"`
-	ApiId       string `json:"api_id"`
-	EventTime   string `json:"event_time"`
+	EventId     uuid.UUID `json:"event_id"`
+	WorkspaceId string    `json:"workspace_id"`
+	ApiKeyId    string    `json:"api_key_id"`
+	ApiId       string    `json:"api_id"`
+	EventTime   string    `json:"event_time"`
 }
 
 type EventPayload struct {

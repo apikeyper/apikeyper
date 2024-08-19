@@ -70,6 +70,7 @@ func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 	go s.Message.Publish(context.Background(), events.EventPayload{
 		EventType: events.API_KEY_CREATED,
 		Data: events.EventData{
+			EventId:     uuid.New(),
 			WorkspaceId: api.WorkspaceId.String(),
 			ApiKeyId:    apiKeyRow.ID.String(),
 			ApiId:       api.ID.String(),

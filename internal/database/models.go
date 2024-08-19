@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -51,11 +52,13 @@ type Api struct {
 
 type ApiKey struct {
 	gorm.Model
-	ID        uuid.UUID `json:"apiKeyId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
-	ApiId     uuid.UUID `json:"-"`
-	HashedKey string    `json:"-"` // Store hashed key securely
-	Name      *string   `json:"name,omitempty"`
-	Prefix    *string   `json:"prefix,omitempty"`
+	ID        uuid.UUID    `json:"apiKeyId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
+	ApiId     uuid.UUID    `json:"-"`
+	HashedKey string       `json:"-"` // Store hashed key securely
+	Name      *string      `json:"name,omitempty"`
+	Prefix    *string      `json:"prefix,omitempty"`
+	Status    string       `json:"status" gorm:"default:active"` // active, revoked, expired
+	ExpiresAt sql.NullTime `json:"expiresAt"`
 	// Roles       []string  `json:"roles,omitempty"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
