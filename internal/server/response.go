@@ -37,3 +37,9 @@ type VerifyApiKeyResponse struct {
 	ApiId uuid.UUID `json:"apiId"`
 	Valid bool      `json:"valid"`
 }
+
+type RevokeApiKeyResponse struct {
+	KeyId   uuid.UUID `json:"keyId"`
+	ApiId   uuid.UUID `json:"apiId"`
+	Revoked bool      `json:"revoked"`
+}

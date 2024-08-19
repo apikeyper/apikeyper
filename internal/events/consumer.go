@@ -52,6 +52,8 @@ func Consumer(ctx context.Context, config *QueueConfig, consumerName string) {
 			usage = "failed"
 		case API_KEY_RATE_LIMITED:
 			usage = "rate_limited"
+		case API_KEY_REVOKED:
+			usage = "revoked"
 		default:
 			slog.Info(fmt.Sprintf("Skipping unknown event type: %v", eventPayload.EventType))
 			client.LRem(ctx, "tempQ", 0, result)
@@ -60,7 +62,7 @@ func Consumer(ctx context.Context, config *QueueConfig, consumerName string) {
 
 		// Log the API key usage
 		apiKeyId := eventPayload.Data.ApiKeyId
-		apiKeyUsage := database.ApiKeyUsage{
+		apiKeyUsage := database.ApiKeyActivity{
 			ID:       eventPayload.Data.EventId,
 			ApiKeyId: uuid.MustParse(apiKeyId),
 			Usage:    usage,

@@ -68,7 +68,7 @@ func SetupDb() *gorm.DB {
 		&RootKey{},
 		&Api{},
 		&ApiKey{},
-		&ApiKeyUsage{},
+		&ApiKeyActivity{},
 	)
 
 	return db

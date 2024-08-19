@@ -30,7 +30,7 @@ type Service interface {
 	UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error)
 
 	// ApiKeyUsage
-	LogApiKeyUsage(apiKeyUsage *ApiKeyUsage) (uuid.UUID, error)
+	LogApiKeyUsage(apiKeyUsage *ApiKeyActivity) (uuid.UUID, error)
 }
 
 type service struct {
