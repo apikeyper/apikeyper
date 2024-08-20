@@ -1,14 +1,14 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
+	"apikeyper/internal/events"
+	ApikeyperServer "apikeyper/internal/server"
+	"apikeyper/tests"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
-	"keyify/internal/events"
-	KeyifyServer "keyify/internal/server"
-	"keyify/tests"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -19,14 +19,14 @@ import (
 
 func TestCreateApiHandler(t *testing.T) {
 	// Create a new service
-	s := &KeyifyServer.Server{
+	s := &ApikeyperServer.Server{
 		Db:      database.New(),
 		Message: events.New(),
 	}
 
 	server := httptest.NewServer(
 		http.HandlerFunc(
-			KeyifyServer.Auth(
+			ApikeyperServer.Auth(
 				s.Db, s.CreateApiHandler,
 			),
 		),
@@ -48,7 +48,7 @@ func TestCreateApiHandler(t *testing.T) {
 		RootHashedKey: utils.HashString(rootKey),
 	})
 
-	createApiReq := KeyifyServer.CreateApiRequest{
+	createApiReq := ApikeyperServer.CreateApiRequest{
 		ApiName: "test-api",
 	}
 	var buf bytes.Buffer

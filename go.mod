@@ -1,4 +1,4 @@
-module keyify
+module apikeyper
 
 go 1.22.5
 

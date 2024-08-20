@@ -1,9 +1,9 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/server"
 	"io"
-	"keyify/internal/database"
-	"keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"

@@ -1,8 +1,8 @@
 package main
 
 import (
+	"apikeyper/internal/events"
 	"context"
-	"keyify/internal/events"
 	"log/slog"
 )
 

@@ -1,10 +1,10 @@
 package events
 
 import (
+	"apikeyper/internal/database"
 	"context"
 	"encoding/json"
 	"fmt"
-	"keyify/internal/database"
 	"log/slog"
 
 	"github.com/google/uuid"

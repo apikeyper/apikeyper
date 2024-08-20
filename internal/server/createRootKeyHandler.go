@@ -1,9 +1,9 @@
 package server
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
 	"context"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
 	"net/http"
 	"time"
 
@@ -29,7 +29,7 @@ func (s *Server) CreateRootKeyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rootKey := utils.GenerateRandomId("keyify_")
+	rootKey := utils.GenerateRandomId("apikeyper_")
 
 	var rootKeyRow = &database.RootKey{
 		ID:            uuid.New(),

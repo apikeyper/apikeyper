@@ -1,11 +1,11 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
+	ApikeyperServer "apikeyper/internal/server"
+	"apikeyper/tests"
 	"fmt"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
-	KeyifyServer "keyify/internal/server"
-	"keyify/tests"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,13 +16,13 @@ import (
 
 func TestFetchApiByIdHandler(t *testing.T) {
 	// Create a new service
-	s := &KeyifyServer.Server{
+	s := &ApikeyperServer.Server{
 		Db: database.New(),
 	}
 
 	server := httptest.NewServer(
 		http.HandlerFunc(
-			KeyifyServer.Auth(
+			ApikeyperServer.Auth(
 				s.Db, s.FetchApiHandler,
 			),
 		),

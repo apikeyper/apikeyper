@@ -1,8 +1,8 @@
 package main
 
 import (
+	"apikeyper/internal/server"
 	"fmt"
-	"keyify/internal/server"
 	"log/slog"
 )
 

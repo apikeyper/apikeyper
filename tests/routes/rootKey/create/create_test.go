@@ -1,15 +1,15 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	ApikeyperServer "apikeyper/internal/server"
 	"bytes"
 	"encoding/json"
-	"keyify/internal/database"
-	KeyifyServer "keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"keyify/tests"
+	"apikeyper/tests"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ import (
 
 func TestCreateRootKeyHandler(t *testing.T) {
 	// Create a new service
-	s := &KeyifyServer.Server{
+	s := &ApikeyperServer.Server{
 		Db: database.New(),
 	}
 
@@ -31,7 +31,7 @@ func TestCreateRootKeyHandler(t *testing.T) {
 		WorkspaceName: "test-workspace",
 	})
 
-	createRootKeyReq := KeyifyServer.CreateRootKeyRequest{
+	createRootKeyReq := ApikeyperServer.CreateRootKeyRequest{
 		Name:        "test-root-key",
 		WorkspaceId: workspaceId,
 	}

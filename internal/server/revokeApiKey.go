@@ -1,9 +1,9 @@
 package server
 
 import (
+	"apikeyper/internal/database/utils"
+	"apikeyper/internal/events"
 	"context"
-	"keyify/internal/database/utils"
-	"keyify/internal/events"
 	"net/http"
 	"time"
 

@@ -1,6 +1,6 @@
 package tests
 
-import "keyify/internal/database"
+import "apikeyper/internal/database"
 
 // CleanupDb cleans up the database by dropping all tables
 func CleanupDb() {

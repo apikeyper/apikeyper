@@ -9,8 +9,8 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	"keyify/internal/database"
-	"keyify/internal/events"
+	"apikeyper/internal/database"
+	"apikeyper/internal/events"
 )
 
 type Server struct {

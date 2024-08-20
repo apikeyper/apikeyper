@@ -1,8 +1,8 @@
 version: '3'
 services:
-  keyify-db:
+  apikeyper-db:
     image: postgres:latest
-    container_name: keyify-db
+    container_name: apikeyper-db
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -23,33 +23,33 @@ services:
       timeout: 5s
       retries: 5
 
-  keyify-redis:
+  apikeyper-redis:
     image: redis:latest
-    container_name: keyify-redis
+    container_name: apikeyper-redis
     restart: always
     ports:
       - '6379:6379'
 
-  keyify-api:
+  apikeyper-api:
     build: .
-    container_name: keyify-api
+    container_name: apikeyper-api
     ports:
       - '8080:8080'
     env_file:
       - .env.template
     depends_on:
-      keyify-db:
+      apikeyper-db:
         condition: service_healthy
 
-  keyify-worker:
+  apikeyper-worker:
     build:
       context: .
       dockerfile: Dockerfile.Worker
-    container_name: keyify-worker
+    container_name: apikeyper-worker
     env_file:
       - .env.template
     depends_on:
-      keyify-db:
+      apikeyper-db:
         condition: service_healthy
 
 

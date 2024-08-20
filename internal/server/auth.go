@@ -1,9 +1,9 @@
 package server
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
 	"context"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
 	"net/http"
 	"strings"
 

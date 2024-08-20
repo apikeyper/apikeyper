@@ -1,10 +1,10 @@
 package server
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
+	"apikeyper/internal/events"
 	"context"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
-	"keyify/internal/events"
 	"net/http"
 	"time"
 
@@ -25,7 +25,7 @@ func determinePrefix(r *CreateApiKeyRequest) string {
 	if r.Prefix != "" {
 		return r.Prefix
 	} else {
-		return "keyify_"
+		return "apikeyper_"
 	}
 }
 func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {

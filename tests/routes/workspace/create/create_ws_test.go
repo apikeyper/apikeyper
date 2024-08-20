@@ -1,22 +1,22 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	ApikeyperServer "apikeyper/internal/server"
 	"bytes"
 	"encoding/json"
-	"keyify/internal/database"
-	KeyifyServer "keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"keyify/tests"
+	"apikeyper/tests"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateWorkspaceHandler(t *testing.T) {
 	// Create a new service
-	s := &KeyifyServer.Server{
+	s := &ApikeyperServer.Server{
 		Db: database.New(),
 	}
 
@@ -24,7 +24,7 @@ func TestCreateWorkspaceHandler(t *testing.T) {
 
 	defer server.Close()
 
-	createRootKeyReq := KeyifyServer.CreateWorkspaceRequest{
+	createRootKeyReq := ApikeyperServer.CreateWorkspaceRequest{
 		Name: "test-ws",
 	}
 	var buf bytes.Buffer

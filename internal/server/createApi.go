@@ -1,8 +1,8 @@
 package server
 
 import (
+	"apikeyper/internal/database"
 	"context"
-	"keyify/internal/database"
 	"net/http"
 	"time"
 

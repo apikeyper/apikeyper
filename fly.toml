@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for keyify on 2024-07-24T02:35:57+09:00
+# fly.toml app configuration file generated for apikeyper on 2024-07-24T02:35:57+09:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'keyify'
+app = 'apikeyper'
 primary_region = 'lhr'
 
 [build]

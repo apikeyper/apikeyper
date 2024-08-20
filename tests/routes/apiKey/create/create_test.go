@@ -1,18 +1,18 @@
 package tests
 
 import (
+	"apikeyper/internal/database"
+	"apikeyper/internal/database/utils"
+	"apikeyper/internal/events"
+	ApikeyperServer "apikeyper/internal/server"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"keyify/internal/database"
-	"keyify/internal/database/utils"
-	"keyify/internal/events"
-	KeyifyServer "keyify/internal/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"keyify/tests"
+	"apikeyper/tests"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -20,14 +20,14 @@ import (
 
 func TestCreateApiKey(t *testing.T) {
 	// Create a new service
-	s := &KeyifyServer.Server{
+	s := &ApikeyperServer.Server{
 		Db:      database.New(),
 		Message: events.New(),
 	}
 
 	server := httptest.NewServer(
 		http.HandlerFunc(
-			KeyifyServer.Auth(
+			ApikeyperServer.Auth(
 				s.Db, s.CreateApiKeyHandler,
 			),
 		),
@@ -56,7 +56,7 @@ func TestCreateApiKey(t *testing.T) {
 		WorkspaceId: workspaceId,
 	})
 
-	createApiKeyReq := KeyifyServer.CreateApiKeyRequest{
+	createApiKeyReq := ApikeyperServer.CreateApiKeyRequest{
 		ApiId: apiId,
 	}
 	var buf bytes.Buffer
