@@ -18,6 +18,24 @@ func (r *CreateApiKeyRequest) Valid(ctx context.Context) (problems map[string]st
 		problems["apiId"] = "apiId is required"
 	}
 
+	if r.RateLimit != (ApiKeyRateLimitConfigRequest{}) {
+		if r.RateLimit.Limit < 1 {
+			problems["rateLimit.limit"] = "rateLimit.limit must be greater than 0"
+			return
+		}
+
+		if r.RateLimit.LimitPeriod == "" {
+			problems["rateLimit.period"] = "rateLimit.period is required"
+			return
+		}
+
+		if r.RateLimit.CounterWindow == "" {
+			problems["rateLimit.window"] = "rateLimit.window is required"
+			return
+		}
+
+	}
+
 	return
 }
 
@@ -59,6 +77,11 @@ func (s *Server) CreateApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		Name:      &decodedJson.Name,
 		Prefix:    &decodedJson.Prefix,
 		HashedKey: hashedKey,
+		RateLimitConfig: database.ApiKeyRateLimitConfig{ // 50 req / min
+			Limit:         50,
+			LimitPeriod:   time.Minute,
+			CounterWindow: time.Second,
+		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}

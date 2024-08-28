@@ -11,18 +11,21 @@ import (
 
 	"apikeyper/internal/database"
 	"apikeyper/internal/events"
+	"apikeyper/internal/ratelimit"
 )
 
 type Server struct {
-	Db      database.Service
-	Message events.MessageService
+	Db          database.Service
+	Message     events.MessageService
+	RateLimiter *ratelimit.RateLimitService
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		Db:      database.New(),
-		Message: events.New(),
+		Db:          database.New(),
+		Message:     events.New(),
+		RateLimiter: ratelimit.New(),
 	}
 
 	// Declare Server config

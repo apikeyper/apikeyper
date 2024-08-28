@@ -85,5 +85,5 @@ func (s *Server) RevokeApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		Revoked: true,
 	}
 
-	encode(w, r, http.StatusCreated, respBody)
+	encode(w, r, http.StatusAccepted, respBody)
 }

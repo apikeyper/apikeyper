@@ -52,16 +52,28 @@ type Api struct {
 
 type ApiKey struct {
 	gorm.Model
-	ID        uuid.UUID    `json:"apiKeyId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
-	ApiId     uuid.UUID    `json:"-"`
-	HashedKey string       `json:"-"` // Store hashed key securely
-	Name      *string      `json:"name,omitempty"`
-	Prefix    *string      `json:"prefix,omitempty"`
-	Status    string       `json:"status" gorm:"default:active"` // active, revoked, expired
-	ExpiresAt sql.NullTime `json:"expiresAt"`
+	ID              uuid.UUID             `json:"apiKeyId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
+	ApiId           uuid.UUID             `json:"-"`
+	HashedKey       string                `json:"-"` // Store hashed key securely
+	Name            *string               `json:"name,omitempty"`
+	Prefix          *string               `json:"prefix,omitempty"`
+	Status          string                `json:"status" gorm:"default:active"` // active, revoked, expired
+	ExpiresAt       sql.NullTime          `json:"expiresAt"`
+	RateLimitConfig ApiKeyRateLimitConfig `gorm:"constraint:OnDelete:CASCADE;"`
 	// Roles       []string  `json:"roles,omitempty"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type ApiKeyRateLimitConfig struct {
+	gorm.Model
+	ID            uuid.UUID `json:"apiKeyRateLimitConfigId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
+	ApiKeyId      uuid.UUID `json:"-"`
+	Limit         int       `json:"limit"`
+	LimitPeriod   time.Duration
+	CounterWindow time.Duration
+	CreatedAt     time.Time `json:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt"`
 }
 
 type ApiKeyActivity struct {

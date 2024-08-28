@@ -9,6 +9,9 @@ import (
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
 
 	r.Get("/health", s.HealthHandler)
@@ -43,6 +46,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// r.Get("/apiKey/list", Auth(s.Db, s.ListApiKeysHandler)
 	// r.Put("/apiKey/{api_key}", Auth(s.Db, s.UpdateApiKeyHandler)
 	// r.Delete("/apiKey/{api_key}", Auth(s.Db, s.DeleteApiKeyHandler)
+	r.Get("/apiKey/{api_key_id}/usage", Auth(s.Db, s.FetchApiKeyUsageHandler))
 
 	return r
 }

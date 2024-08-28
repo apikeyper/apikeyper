@@ -1,6 +1,7 @@
 package events
 
 import (
+	"apikeyper/internal/common"
 	"apikeyper/internal/database"
 	"context"
 	"encoding/json"
@@ -8,23 +9,18 @@ import (
 	"log/slog"
 
 	"github.com/google/uuid"
-	"github.com/redis/go-redis/v9"
 )
 
-func Consumer(ctx context.Context, config *QueueConfig, consumerName string) {
+func Consumer(ctx context.Context, config *common.RedisConfig, consumerName string) {
 
-	client := redis.NewClient(&redis.Options{
-		Addr:     config.RedisUrl,
-		Password: "",
-		DB:       0,
-	})
+	client := common.NewRedisClient(config, "events")
 
 	dbService := database.New()
 
 	slog.Info(fmt.Sprintf("Starting consumer: %s", consumerName))
 
 	for {
-		result, err := client.BRPopLPush(ctx, config.QueueName, "tempQ", 0).Result()
+		result, err := client.BRPopLPush(ctx, eventQueueName, eventTempQueueName, 0).Result()
 
 		if err != nil {
 			fmt.Printf("[%s] error popping from queue: %v\n", consumerName, err)

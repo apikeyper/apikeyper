@@ -3,6 +3,8 @@ package server
 import (
 	"time"
 
+	"apikeyper/internal/database"
+
 	"github.com/google/uuid"
 )
 
@@ -42,4 +44,10 @@ type RevokeApiKeyResponse struct {
 	KeyId   uuid.UUID `json:"keyId"`
 	ApiId   uuid.UUID `json:"apiId"`
 	Revoked bool      `json:"revoked"`
+}
+
+type FetchApiKeyUsageResponse struct {
+	ApiKeyId uuid.UUID                   `json:"apiKeyId"`
+	Records  []database.ApiKeyUsageCount `json:"records"`
+	Count    int                         `json:"count"`
 }

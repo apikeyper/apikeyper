@@ -25,12 +25,13 @@ type Service interface {
 
 	// ApiKey
 	CreateApiKey(apiKey *ApiKey) (uuid.UUID, error)
-	FetchApiKeyById(apiKeyId string) (*ApiKey, error)
+	FetchApiKeyById(apiKeyId uuid.UUID) (*ApiKey, error)
 	VerifyApiKey(apiKeyHashed string) (*ApiKey, error)
 	UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error)
 
 	// ApiKeyUsage
 	LogApiKeyUsage(apiKeyUsage *ApiKeyActivity) (uuid.UUID, error)
+	FetchApiKeyUsage(apiKeyId uuid.UUID, interval string) (*[]ApiKeyUsageCount, error)
 }
 
 type service struct {

@@ -2,42 +2,21 @@ package events
 
 import (
 	"context"
-	"log/slog"
-	"os"
 
-	"github.com/joho/godotenv"
+	"apikeyper/internal/common"
+
 	"github.com/redis/go-redis/v9"
 )
 
 var messageServiceInstance *messageService
 
-type QueueConfig struct {
-	RedisUrl  string
-	QueueName string
-}
-
-func GetQueueConfig() *QueueConfig {
-	err := godotenv.Load()
-	if err != nil {
-		slog.Debug("No .env file to load")
-	}
-
-	return &QueueConfig{
-		RedisUrl:  os.Getenv("REDIS_URL"),
-		QueueName: "queue",
-	}
-}
+var (
+	eventQueueName     = "queue"
+	eventTempQueueName = "tempQ"
+)
 
 type MessageService interface {
 	Publish(ctx context.Context, eventPayload EventPayload) error
-}
-
-func NewRedisClient(config *QueueConfig) *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:     config.RedisUrl,
-		Password: "",
-		DB:       0,
-	})
 }
 
 type messageService struct {
@@ -51,11 +30,11 @@ func New() MessageService {
 		return messageServiceInstance
 	}
 
-	config := GetQueueConfig()
+	config := common.GetRedisConfig()
 
 	messageServiceInstance = &messageService{
-		client:    NewRedisClient(config),
-		queueName: config.QueueName,
+		client:    common.NewRedisClient(config, "events"),
+		queueName: eventQueueName,
 	}
 
 	return messageServiceInstance

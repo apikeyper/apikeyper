@@ -3,6 +3,7 @@ package server
 import (
 	"apikeyper/internal/database/utils"
 	"apikeyper/internal/events"
+	"apikeyper/internal/ratelimit"
 	"context"
 	"net/http"
 	"time"
@@ -62,6 +63,25 @@ func SendApiKeyVerifyFailedEvent(
 	})
 }
 
+func SendApiKeyRateLimitExceededEvent(
+	messageService events.MessageService,
+	workspaceId uuid.UUID,
+	apiKeyId uuid.UUID,
+	apiId uuid.UUID,
+	eventTime time.Time,
+) {
+	go messageService.Publish(context.Background(), events.EventPayload{
+		EventType: events.API_KEY_RATE_LIMITED,
+		Data: events.EventData{
+			EventId:     uuid.New(),
+			WorkspaceId: workspaceId.String(),
+			ApiKeyId:    apiKeyId.String(),
+			ApiId:       apiId.String(),
+			EventTime:   eventTime.String(),
+		},
+	})
+}
+
 func (s *Server) VerifyApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 	// Get session from context
 	session := r.Context().Value("session").(Session)
@@ -83,7 +103,7 @@ func (s *Server) VerifyApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the api key is active
 	if apiKey.Status != "active" {
-		encode(w, r, http.StatusForbidden, VerifyApiKeyResponse{
+		encode(w, r, http.StatusOK, VerifyApiKeyResponse{
 			ApiId: apiKey.ApiId,
 			KeyId: apiKey.ID,
 			Valid: false,
@@ -94,13 +114,30 @@ func (s *Server) VerifyApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the api key is expired
 	if apiKey.ExpiresAt.Valid && apiKey.ExpiresAt.Time.Before(time.Now()) {
-		encode(w, r, http.StatusForbidden, VerifyApiKeyResponse{
+		encode(w, r, http.StatusOK, VerifyApiKeyResponse{
 			ApiId: apiKey.ApiId,
 			KeyId: apiKey.ID,
 			Valid: false,
 		})
 		s.Db.UpdateApiKeyStatus(apiKey.ID, "expired")
 		SendApiKeyVerifyFailedEvent(s.Message, session.WorkspaceId, apiKey.ID, apiKey.ApiId, time.Now())
+		return
+	}
+
+	// Check if api key usage is over the rate limit
+	rateLimitParams := ratelimit.RateLimitParams{
+		Limit:         apiKey.RateLimitConfig.Limit,
+		LimitPeriod:   apiKey.RateLimitConfig.LimitPeriod,
+		CounterWindow: apiKey.RateLimitConfig.CounterWindow,
+	}
+	rateLimitErr := s.RateLimiter.Increment(r.Context(), rateLimitParams, apiKey.ID.String(), 1)
+	if rateLimitErr != nil {
+		encode(w, r, http.StatusOK, VerifyApiKeyResponse{
+			ApiId: apiKey.ApiId,
+			KeyId: apiKey.ID,
+			Valid: false,
+		})
+		SendApiKeyRateLimitExceededEvent(s.Message, session.WorkspaceId, apiKey.ID, apiKey.ApiId, time.Now())
 		return
 	}
 
@@ -113,5 +150,5 @@ func (s *Server) VerifyApiKeyHandler(w http.ResponseWriter, r *http.Request) {
 		Valid: true,
 	}
 
-	encode(w, r, http.StatusCreated, respBody)
+	encode(w, r, http.StatusOK, respBody)
 }
