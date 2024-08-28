@@ -4,6 +4,7 @@ import (
 	"apikeyper/internal/database"
 	"apikeyper/internal/database/utils"
 	"apikeyper/internal/events"
+	"apikeyper/internal/ratelimit"
 	ApikeyperServer "apikeyper/internal/server"
 	"bytes"
 	"encoding/json"
@@ -21,8 +22,9 @@ import (
 func TestVerifyApiKeyHandler(t *testing.T) {
 	// Create a new service
 	s := &ApikeyperServer.Server{
-		Db:      database.New(),
-		Message: events.New(),
+		Db:          database.New(),
+		Message:     events.New(),
+		RateLimiter: ratelimit.New(),
 	}
 
 	server := httptest.NewServer(
@@ -90,7 +92,7 @@ func TestVerifyApiKeyHandler(t *testing.T) {
 	defer resp.Body.Close()
 
 	// Assertions
-	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// Cleanup db
 	defer tests.CleanupDb()

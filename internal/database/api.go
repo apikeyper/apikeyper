@@ -22,7 +22,7 @@ func (s *service) CreateApi(api *Api) (uuid.UUID, error) {
 
 func (s *service) FetchApi(apiId uuid.UUID) (*Api, error) {
 	var api *Api
-	result := s.db.Where("id = ?", apiId).First(&api)
+	result := s.db.Where("id = ?", apiId).Preload("ApiKeys").First(&api)
 
 	if result.Error != nil {
 		slog.Error(fmt.Sprintf("Failed to fetch api. Error: %v", result.Error))

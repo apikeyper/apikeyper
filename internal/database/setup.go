@@ -9,6 +9,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	"github.com/joho/godotenv"
 )
@@ -46,7 +47,9 @@ func GetGormDb() *gorm.DB {
 	dbConfig := GetDbConfig()
 
 	dsn := ParseDbUrl(dbConfig)
-	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{})
+	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	})
 
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
@@ -69,6 +72,7 @@ func SetupDb() *gorm.DB {
 		&Api{},
 		&ApiKey{},
 		&ApiKeyActivity{},
+		&ApiKeyRateLimitConfig{},
 	)
 
 	return db

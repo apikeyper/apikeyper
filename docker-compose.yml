@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   apikeyper-db:
     image: postgres:latest
@@ -13,12 +13,12 @@ services:
         max-size: 10m
         max-file: "3"
     # ports:
-    #   - '5438:5432'
+    #   - "5438:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
-      - ./initdb:/docker-entrypoint-initdb.d  # Mount the initdb scripts
+      - ./initdb:/docker-entrypoint-initdb.d # Mount the initdb scripts
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,13 +28,13 @@ services:
     container_name: apikeyper-redis
     restart: always
     # ports:
-    #   - '6379:6379'
+    #   - "6379:6379"
 
   apikeyper-api:
     build: .
     container_name: apikeyper-api
     ports:
-      - '8080:8080'
+      - "8000:8080"
     env_file:
       - .env.template
     depends_on:
@@ -51,7 +51,6 @@ services:
     depends_on:
       apikeyper-db:
         condition: service_healthy
-
 
 volumes:
   dbdata:
