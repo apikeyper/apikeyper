@@ -38,5 +38,5 @@ func (s *Server) FetchApiHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:   api.UpdatedAt,
 	}
 
-	encode(w, r, http.StatusCreated, respBody)
+	encode(w, r, http.StatusOK, respBody)
 }

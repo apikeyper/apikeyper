@@ -2,7 +2,6 @@ package tests
 
 import (
 	"apikeyper/internal/database"
-	"apikeyper/internal/database/utils"
 	ApikeyperServer "apikeyper/internal/server"
 	"apikeyper/tests"
 	"fmt"
@@ -14,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListApisHandler(t *testing.T) {
+func TestFetchWorkspaceByIdHandler(t *testing.T) {
 	// Create a new service
 	s := &ApikeyperServer.Server{
 		Db: database.New(),
@@ -22,9 +21,7 @@ func TestListApisHandler(t *testing.T) {
 
 	server := httptest.NewServer(
 		http.HandlerFunc(
-			ApikeyperServer.Auth(
-				s.Db, s.ListApsiHandler,
-			),
+			s.FetchWorkspaceHandler,
 		),
 	)
 
@@ -36,29 +33,9 @@ func TestListApisHandler(t *testing.T) {
 		WorkspaceName: "test-workspace",
 	})
 
-	// Create root key
-	rootKey := "test-root-key"
-	s.Db.CreateRootKey(&database.RootKey{
-		ID:            uuid.New(),
-		WorkspaceId:   workspaceId,
-		RootHashedKey: utils.HashString(rootKey),
-	})
-
-	// Create an API
-	apiId := uuid.New()
-	apiId2 := uuid.New()
-	s.Db.CreateApi(&database.Api{
-		ID:          apiId,
-		WorkspaceId: workspaceId,
-	})
-	s.Db.CreateApi(&database.Api{
-		ID:          apiId2,
-		WorkspaceId: workspaceId,
-	})
-
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", server.URL, nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", rootKey))
+	url := fmt.Sprintf("%s/workspace/%s", server.URL, workspaceId)
+	req, _ := http.NewRequest("GET", url, nil)
 	resp, err := client.Do(req)
 
 	if err != nil {

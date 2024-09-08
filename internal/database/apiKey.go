@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 func (s *service) CreateApiKey(apiKey *ApiKey) (uuid.UUID, error) {
@@ -43,6 +44,26 @@ func (s *service) VerifyApiKey(apiKeyHashed string) (*ApiKey, error) {
 
 	slog.Info(fmt.Sprintf("Fetched api key to verify: %v", apiKey.ID))
 	return &apiKey, nil
+}
+
+func (s *service) ListApiKeysForApi(apiId uuid.UUID) (*[]ApiKey, error) {
+	var apiKeys *[]ApiKey
+	result := s.db.
+		Order(
+			clause.OrderByColumn{
+				Column: clause.Column{Name: "created_at"},
+				Desc:   true,
+			},
+		).
+		Where("api_id = ?", apiId).
+		Find(&apiKeys)
+
+	if result.Error != nil {
+		slog.Error(fmt.Sprintf("Failed to list api keys for api. Error: %v", result.Error))
+		return nil, result.Error
+	}
+
+	return apiKeys, nil
 }
 
 func (s *service) UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error) {

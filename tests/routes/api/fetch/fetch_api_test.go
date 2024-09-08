@@ -64,7 +64,7 @@ func TestFetchApiByIdHandler(t *testing.T) {
 	defer resp.Body.Close()
 
 	// Assertions
-	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// Cleanup db
 	defer tests.CleanupDb()
