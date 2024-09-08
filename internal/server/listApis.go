@@ -27,5 +27,5 @@ func (s *Server) ListApsiHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	encode(w, r, http.StatusCreated, respBody)
+	encode(w, r, http.StatusOK, respBody)
 }

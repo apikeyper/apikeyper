@@ -13,10 +13,13 @@ type Service interface {
 
 	// Workspace
 	CreateWorkspace(workspace *Workspace) (uuid.UUID, error)
+	FetchWorkspaceById(workspaceId uuid.UUID) (*Workspace, error)
 
 	// RootKey
 	CreateRootKey(rootKey *RootKey) (uuid.UUID, error)
 	FetchRootKey(rootHashedKey string) (*RootKey, error)
+	FetchRootKeyById(rootKeyId uuid.UUID) (*RootKey, error)
+	ListRootKeysForWorkspace(workspaceId uuid.UUID) (*[]RootKey, error)
 
 	// Api
 	CreateApi(api *Api) (uuid.UUID, error)
@@ -28,6 +31,7 @@ type Service interface {
 	FetchApiKeyById(apiKeyId uuid.UUID) (*ApiKey, error)
 	VerifyApiKey(apiKeyHashed string) (*ApiKey, error)
 	UpdateApiKeyStatus(apiKeyId uuid.UUID, status string) (*ApiKey, error)
+	ListApiKeysForApi(apiId uuid.UUID) (*[]ApiKey, error)
 
 	// ApiKeyUsage
 	LogApiKeyUsage(apiKeyUsage *ApiKeyActivity) (uuid.UUID, error)
