@@ -2,17 +2,16 @@ name: Go-test
 on: [pull_request]
 
 env:
-  DB_HOST: localhost
-  DB_USER: postgres
-  DB_PASS: pass
-  DB_NAME: apikeyper_test
-  DB_PORT: 5432
+  DATABASE_URL: postgresql://postgres:pass@localhost:5432/apikeyper_test
   REDIS_URL: localhost:6379
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./core
 
     services:
       postgres:
