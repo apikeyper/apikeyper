@@ -2,26 +2,37 @@ package server
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 )
 
 func (s *Server) ListApiKeysForApiHandler(w http.ResponseWriter, r *http.Request) {
 
-	apiId := r.URL.Query().Get("apiId")
+	apiId := strings.Split(r.URL.Path, "/")[2]
+
+	if apiId == "" {
+		encode(w, r, http.StatusBadRequest, "apiId is required")
+		return
+	}
 
 	apiUuid, err := uuid.Parse(apiId)
 
-	apiKeyUsageRecords, err := s.Db.ListApiKeysForApi(apiUuid)
+	if err != nil {
+		encode(w, r, http.StatusBadRequest, "Invalid apiId")
+		return
+	}
+
+	apiKeys, err := s.Db.ListApiKeysForApi(apiUuid)
 
 	if err != nil {
-		encode(w, r, http.StatusInternalServerError, "Failed to retrieve keys for api")
+		encode(w, r, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var respBody []FetchApiKeyResponse
 
-	for _, ak := range *apiKeyUsageRecords {
+	for _, ak := range *apiKeys {
 		respBody = append(respBody, FetchApiKeyResponse{
 			ApiKeyId:  ak.ID,
 			ApiId:     ak.ApiId,

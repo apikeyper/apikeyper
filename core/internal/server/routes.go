@@ -34,6 +34,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// Api
 	r.Post("/api", Auth(s.Db, s.CreateApiHandler))
 	r.Get("/api/{api_id}", Auth(s.Db, s.FetchApiHandler))
+	r.Get("/api/{api_id}/keys", Auth(s.Db, s.ListApiKeysForApiHandler))
 	r.Get("/api/list", Auth(s.Db, s.ListApsiHandler))
 	// r.Put("/api/{api_id}", Auth(s.Db, s.UpdateApiHandler))
 	// r.Delete("/api/{api_id}", Auth(s.Db, s.DeleteApiHandler))

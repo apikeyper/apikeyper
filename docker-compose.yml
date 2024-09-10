@@ -54,5 +54,16 @@ services:
       apikeyper-db:
         condition: service_healthy
 
+  apikeyper-dashboard:
+    build:
+      context: dashboard
+      dockerfile: Dockerfile.Web
+    container_name: apikeyper-dashboard
+    environment:
+      - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
+      - ROOTKEY_PASSWORD=e96Cx0+CcBMoa0BY9GSWNvyg4RQY0r0H
+    ports:
+      - 3000:3000
+
 volumes:
   dbdata:
