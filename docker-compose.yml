@@ -28,7 +28,9 @@ services:
     restart: always
 
   apikeyper-api:
-    build: .
+    build:
+      context: core
+      dockerfile: Dockerfile
     container_name: apikeyper-api
     ports:
       - "8080:8080"
@@ -42,7 +44,7 @@ services:
 
   apikeyper-worker:
     build:
-      context: .
+      context: core
       dockerfile: Dockerfile.Worker
     container_name: apikeyper-worker
     environment:
