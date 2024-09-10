@@ -30,27 +30,30 @@ services:
     ports:
       - "6379:6379"
 
-  # apikeyper-api:
-  #   build: .
-  #   container_name: apikeyper-api
-  #   ports:
-  #     - "8080:8080"
-  #   env_file:
-  #     - .env.template
-  #   depends_on:
-  #     apikeyper-db:
-  #       condition: service_healthy
+  apikeyper-api:
+    build: .
+    container_name: apikeyper-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - REDIS_URL=apikeyper-redis:6379
+    depends_on:
+      apikeyper-db:
+        condition: service_healthy
 
-  # apikeyper-worker:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.Worker
-  #   container_name: apikeyper-worker
-  #   env_file:
-  #     - .env.template
-  #   depends_on:
-  #     apikeyper-db:
-  #       condition: service_healthy
+  apikeyper-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.Worker
+    container_name: apikeyper-worker
+    environment:
+      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - REDIS_URL=apikeyper-redis:6379
+    depends_on:
+      apikeyper-db:
+        condition: service_healthy
 
 volumes:
   dbdata:
