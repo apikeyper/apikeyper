@@ -60,6 +60,7 @@ services:
       dockerfile: Dockerfile.Web
     container_name: apikeyper-dashboard
     environment:
+      - PORT=3000
       - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
       - DATABASE_URL=${DATABASE_URL}
       - ROOTKEY_PASSWORD=${SECRET_SIGNING_KEY}
