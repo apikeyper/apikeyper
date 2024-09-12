@@ -30,32 +30,44 @@ services:
     ports:
       - "6379:6379"
 
-  # apikeyper-api:
-  #   build:
-  #     context: core
-  #     dockerfile: Dockerfile
-  #   container_name: apikeyper-api
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     - PORT=8080
-  #     - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
-  #     - REDIS_URL=apikeyper-redis:6379
-  #   depends_on:
-  #     apikeyper-db:
-  #       condition: service_healthy
+  apikeyper-api:
+    build:
+      context: core
+      dockerfile: Dockerfile
+    container_name: apikeyper-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - REDIS_URL=apikeyper-redis:6379
+    depends_on:
+      apikeyper-db:
+        condition: service_healthy
 
-  # apikeyper-worker:
+  apikeyper-worker:
+    build:
+      context: core
+      dockerfile: Dockerfile.Worker
+    container_name: apikeyper-worker
+    environment:
+      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - REDIS_URL=apikeyper-redis:6379
+    depends_on:
+      apikeyper-db:
+        condition: service_healthy
+
+  # apikeyper-dashboard:
   #   build:
-  #     context: core
-  #     dockerfile: Dockerfile.Worker
-  #   container_name: apikeyper-worker
+  #     context: dashboard
+  #     dockerfile: Dockerfile.Web
+  #   container_name: apikeyper-dashboard
   #   environment:
-  #     - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
-  #     - REDIS_URL=apikeyper-redis:6379
-  #   depends_on:
-  #     apikeyper-db:
-  #       condition: service_healthy
+  #     - NODE_ENV=development
+  #     - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
+  #     - ROOTKEY_PASSWORD=e96Cx0+CcBMoa0BY9GSWNvyg4RQY0r0H
+  #   ports:
+  #     - 3000:3000
 
 volumes:
   dbdata:

@@ -8,16 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
-// type User struct {
-// 	gorm.Model
-// 	ID        uint      `json:"userid" gorm:"primaryKey"`
-// 	Email     string    `json:"email"`
-// 	Role      string    `json:"role"`
-// 	FirstName string    `json:"firstName"`
-// 	LastName  string    `json:"lastName"`
-// 	CreatedAt time.Time `json:"createdAt"`
-// 	UpdatedAt time.Time `json:"updatedAt"`
-// }
+type User struct {
+	gorm.Model
+	ID       string `json:"userId" gorm:"primaryKey"`
+	Username string `json:"username"`
+	GithubId string `json:"githubId"`
+}
 
 type Workspace struct {
 	gorm.Model
