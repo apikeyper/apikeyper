@@ -80,7 +80,7 @@ func TestListApiKeysHandler(t *testing.T) {
 	})
 
 	client := &http.Client{}
-	url := fmt.Sprintf("%s/apiKey/list?apiId=%s", server.URL, apiId)
+	url := fmt.Sprintf("%s/api/%s/keys", server.URL, apiId)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", rootKey))
 

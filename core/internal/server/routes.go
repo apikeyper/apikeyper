@@ -44,7 +44,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Post("/apiKey/verify", Auth(s.Db, s.VerifyApiKeyHandler))
 	r.Put("/apiKey/revoke", Auth(s.Db, s.RevokeApiKeyHandler))
 	// r.Get("/apiKey/{api_key}", Auth(s.Db, s.FetchApiKeyHandler)
-	r.Get("/apiKey/list", Auth(s.Db, s.ListApiKeysForApiHandler))
+	// r.Get("/apiKey/list", Auth(s.Db, s.ListApiKeysForApiHandler))
 	// r.Put("/apiKey/{api_key}", Auth(s.Db, s.UpdateApiKeyHandler)
 	// r.Delete("/apiKey/{api_key}", Auth(s.Db, s.DeleteApiKeyHandler)
 	r.Get("/apiKey/{api_key_id}/usage", Auth(s.Db, s.FetchApiKeyUsageHandler))
