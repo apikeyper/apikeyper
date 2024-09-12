@@ -33,5 +33,3 @@
 # sqlite
 **/*.db
 fly.toml
-
-**/.env.local

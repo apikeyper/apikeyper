@@ -1,0 +1,12 @@
+{
+  "go.testEnvVars": {
+    "APP_ENV": "test",
+    "DATABASE_URL": "postgres://postgres:pass@localhost:5438/apikeyper_test?sslmode=disable",
+    "DB_HOST": "localhost",
+    "DB_USER": "postgres",
+    "DB_PASS": "pass",
+    "DB_NAME": "apikeyper_test",
+    "DB_PORT": "5438",
+    "REDIS_URL": "localhost:6379"
+  }
+}
