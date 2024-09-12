@@ -1,11 +1,8 @@
-// import { SignInButton } from "@/components/signInButton";
-
-export default async function Home() {
-  return (
-    <main className="flex">
-      <div className="m-auto text-center align-middle items-center p-20">
-        {/* <SignInButton /> */}
-      </div>
-    </main>
-  );
+export default async function LoginPage() {
+	return (
+		<>
+			<h1>Sign in</h1>
+			<a href="/login/github">Sign in with GitHub</a>
+		</>
+	);
 }

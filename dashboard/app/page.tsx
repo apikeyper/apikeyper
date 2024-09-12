@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-// import { getUser } from "@workos-inc/authkit-nextjs";
 import UserItem from "@/components/userItem";
 
 export default async function Home() {
-  // const { user } = await getUser();
 
   return (
     <main>

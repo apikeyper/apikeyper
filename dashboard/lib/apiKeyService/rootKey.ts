@@ -1,4 +1,4 @@
-export async function getNewRootKey(user_id: string): Promise<string> {
+export async function getNewRootKey(workspaceId: string, keyName?: string): Promise<string> {
   // Check if the root key is already stored in a cookie
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,8 +8,8 @@ export async function getNewRootKey(user_id: string): Promise<string> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      "name": "web-client",
-      "workspaceId": user_id,
+      "name": keyName ?? "web-client-default",
+      "workspaceId": workspaceId,
     }),
   })
 

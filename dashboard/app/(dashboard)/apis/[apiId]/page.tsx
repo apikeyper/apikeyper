@@ -1,4 +1,4 @@
-import { getRootKey } from "@/app/auth";
+import { getRootKey } from "@/app/auth/auth.client";
 import { DataTable } from "@/components/ui/dataTable";
 
 interface GetApiKeysProps {

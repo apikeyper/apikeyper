@@ -1,10 +1,8 @@
 "use client";
 
 import { MessageSquare, Settings, Server, Home } from "lucide-react";
-// import UserItem from "@/components/userItem";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-// import { type User } from '@workos-inc/node';
 import { useRouter } from "next/navigation";
 
 export function Sidebar() {

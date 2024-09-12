@@ -1,4 +1,4 @@
-import { getRootKey } from "@/app/auth";
+import { getRootKey } from "@/app/auth/auth.client";
 
 interface CreateApiKeyProps {
   apiId: string;

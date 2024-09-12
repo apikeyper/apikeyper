@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getRootKey } from "@/app/auth";
+import { getRootKey } from "@/app/auth/auth.client";
+import { CreateNewApiSheet } from "@/components/newApiSheet";
 
 interface Api {
   apiId: string;
@@ -22,7 +23,7 @@ async function getApis(): Promise<Api[]> {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch API keys");
+    throw new Error("Failed to fetch APIs");
   }
 
   const respJson = await response.json();
@@ -39,7 +40,10 @@ export default async function ApisPage() {
 
 
   return (
-    <main className="flex">
+    <main className="flex flex-col space-y-5">
+      <div>
+      <CreateNewApiSheet />
+      </div>
       <div className="flex flex-row space-x-2">
         {apis.map((api) => (
           <Link key={api.apiId} href={`/apis/${api.apiId}`}>
