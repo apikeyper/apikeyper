@@ -7,6 +7,8 @@ import { createGithubUser, getUserByGithubId } from "@/lib/db/query";
 
 export async function GET(request: Request): Promise<Response> {
 
+	console.log("Received callback request");
+
 	const url = new URL(request.url);
 	const code = url.searchParams.get("code");
 	const state = url.searchParams.get("state");
@@ -31,6 +33,7 @@ export async function GET(request: Request): Promise<Response> {
 
     // Fetch existing user
 		const existingUser = await getUserByGithubId(githubUser.id);
+		console.log("Existing user: ", existingUser);
 
 		if (existingUser !== null) {
 			const session = await lucia.createSession(existingUser.id, {});
@@ -45,6 +48,7 @@ export async function GET(request: Request): Promise<Response> {
 		}
 
     // Create a new user
+		console.log("Creating new user");
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		await createGithubUser(userId, githubUser.id, githubUser.login);
 
