@@ -5,9 +5,9 @@ services:
     container_name: apikeyper-db
     restart: always
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    user: postgres
+    user: ${POSTGRES_USER}
     logging:
       options:
         max-size: 10m
