@@ -4,11 +4,7 @@ export default defineConfig({
   schema: "./lib/db/schema.ts",
   dialect: 'postgresql',
   dbCredentials: {
-    host: '0.0.0.0',
-    port: 5438,
-    user: 'postgres',
-    password: 'pass',
-    database: 'postgres',
+    url: process.env.DATABASE_URL as string,
   },
   schemaFilter: "auth",
   verbose: true,

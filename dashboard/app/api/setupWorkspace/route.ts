@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 export async function GET(_: NextRequest) {
   const { user, session } = await validateRequest();
 
-  const workspaceId = await createDefaultWorkspaceForUser(user!.id, session!.id);
+  const workspaceId = await createDefaultWorkspaceForUser(user!.githubId, session!.id);
 
   const rootKey = await getNewRootKey(workspaceId, `${user!.id}-default-root-key`);
     const encryptedRootKey = await sealData(rootKey, {

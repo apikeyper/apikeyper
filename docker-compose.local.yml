@@ -5,8 +5,8 @@ services:
     container_name: apikeyper-db
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     user: postgres
     logging:
       options:
@@ -39,7 +39,7 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
-      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apikeyper-db:5432/postgres
       - REDIS_URL=apikeyper-redis:6379
     depends_on:
       apikeyper-db:
@@ -51,23 +51,25 @@ services:
       dockerfile: Dockerfile.Worker
     container_name: apikeyper-worker
     environment:
-      - DATABASE_URL=postgresql://postgres:pass@apikeyper-db:5432/postgres
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apikeyper-db:5432/postgres
       - REDIS_URL=apikeyper-redis:6379
     depends_on:
       apikeyper-db:
         condition: service_healthy
 
-  # apikeyper-dashboard:
-  #   build:
-  #     context: dashboard
-  #     dockerfile: Dockerfile.Web
-  #   container_name: apikeyper-dashboard
-  #   environment:
-  #     - NODE_ENV=development
-  #     - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
-  #     - ROOTKEY_PASSWORD=e96Cx0+CcBMoa0BY9GSWNvyg4RQY0r0H
-  #   ports:
-  #     - 3000:3000
+  apikeyper-dashboard:
+    build:
+      context: dashboard
+      dockerfile: Dockerfile.Web
+    container_name: apikeyper-dashboard
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apikeyper-db:5432/postgres
+    ports:
+      - 3000:3000
+    depends_on:
+      - apikeyper-api
 
 volumes:
   dbdata:

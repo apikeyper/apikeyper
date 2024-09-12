@@ -1,4 +1,5 @@
 import { getRootKey } from "@/app/auth/auth.client";
+import { apiKeyperUrl } from "./config";
 
 
 interface CreateApiProps {
@@ -7,9 +8,7 @@ interface CreateApiProps {
 
 export async function createApi(createApiProps: CreateApiProps) {
   const rootKey = await getRootKey();
-
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-  const response = await fetch(`${baseUrl}/api`, {
+  const response = await fetch(`${apiKeyperUrl}/api`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

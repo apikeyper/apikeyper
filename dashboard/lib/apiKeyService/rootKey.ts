@@ -1,8 +1,8 @@
+import { apiKeyperUrl } from "./config";
+
 export async function getNewRootKey(workspaceId: string, keyName?: string): Promise<string> {
   // Check if the root key is already stored in a cookie
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-  const response = await fetch(`${baseUrl}/rootKey`, {
+  const response = await fetch(`${apiKeyperUrl}/rootKey`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
