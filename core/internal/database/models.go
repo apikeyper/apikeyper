@@ -10,15 +10,24 @@ import (
 
 type User struct {
 	gorm.Model
-	ID       string `json:"userId" gorm:"primaryKey"`
-	Username string `json:"username"`
-	GithubId string `json:"githubId"`
+	ID         string       `json:"userId" gorm:"primaryKey"`
+	Username   string       `json:"username"`
+	GithubId   string       `json:"githubId" gorm:"uniqueIndex:github_id_unq_idx"`
+	Workspaces []*Workspace `gorm:"many2many:user_workspaces;"`
+}
+
+type Session struct {
+	gorm.Model
+	ID        string `json:"sessionId" gorm:"primaryKey"`
+	UserId    string `json:"userId"`
+	ExpiresAt time.Time
 }
 
 type Workspace struct {
 	gorm.Model
 	ID            uuid.UUID `json:"workspaceId" gorm:"primaryKey;type:uuid;default:(gen_random_uuid())"`
 	WorkspaceName string    `json:"workspaceName"`
+	Users         []*User   `gorm:"many2many:user_workspaces;"`
 	Apis          []Api
 	RootKeys      []RootKey
 	CreatedAt     time.Time `json:"createdAt"`

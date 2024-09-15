@@ -5,7 +5,8 @@ import (
 )
 
 type CreateWorkspaceRequest struct {
-	Name string `json:"name"`
+	UserGithubId string `json:"userGithubId"`
+	Name         string `json:"name"`
 }
 
 type CreateRootKeyRequest struct {

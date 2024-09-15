@@ -14,18 +14,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateWorkspaceHandler(t *testing.T) {
+func TestFetchOrCreateWorkspaceHandler(t *testing.T) {
 	// Create a new service
 	s := &ApikeyperServer.Server{
 		Db: database.New(),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(s.CreateWorkspaceHandler))
+	server := httptest.NewServer(http.HandlerFunc(s.FetchOrCreateWorkspaceHandler))
 
 	defer server.Close()
 
+	// Create a user for testing
+	testGithubId := "12345678"
+	s.Db.CreateUser(&database.User{
+		ID:       "test-user-id",
+		Username: "test-user",
+		GithubId: testGithubId,
+	})
+
 	createRootKeyReq := ApikeyperServer.CreateWorkspaceRequest{
-		Name: "test-ws",
+		Name:         "test-ws",
+		UserGithubId: testGithubId,
 	}
 	var buf bytes.Buffer
 	_ = json.NewEncoder(&buf).Encode(createRootKeyReq)

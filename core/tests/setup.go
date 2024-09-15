@@ -11,7 +11,10 @@ DROP TABLE IF EXISTS "api_key_activities";
 DROP TABLE IF EXISTS "api_keys";
 DROP TABLE IF EXISTS "apis";
 DROP TABLE IF EXISTS "root_keys";
+DROP TABLE IF EXISTS "user_workspaces";
+DROP TABLE IF EXISTS "sessions";
 DROP TABLE IF EXISTS "workspaces";
+DROP TABLE IF EXISTS "users";
 DROP TABLE IF EXISTS "api_key_usages";
 `)
 	dbConn.Commit()

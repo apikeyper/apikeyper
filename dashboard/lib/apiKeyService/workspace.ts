@@ -2,7 +2,7 @@
 
 import { apiKeyperUrl } from "./config";
 
-export async function createDefaultWorkspaceForUser(githubId: string, sessionId: string): Promise<string> {
+export async function GetOrCreateDefaultWorkspaceForUser(githubId: string, sessionId: string): Promise<string> {
   const response = await fetch(`${apiKeyperUrl}/workspace`, {
     method: "POST",
     headers: {
@@ -10,7 +10,7 @@ export async function createDefaultWorkspaceForUser(githubId: string, sessionId:
       Authorization: `Bearer ${sessionId}`,
     },
     body: JSON.stringify({
-      // "userId": userId,
+      "userGithubId": githubId,
       "name": `"Default-${githubId}"`,
     }),
   })

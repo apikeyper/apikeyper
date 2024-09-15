@@ -17,7 +17,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Get("/health", s.HealthHandler)
 
 	// Workspace
-	r.Post("/workspace", s.CreateWorkspaceHandler)
+	r.Post("/workspace", s.FetchOrCreateWorkspaceHandler)
 	r.Get("/workspace/{workspace_id}", s.FetchWorkspaceHandler)
 	// r.Get("/workspace/list", s.ListWorkspacesHandler)
 	// r.Put("/workspace/{workspace_id}", s.UpdateWorkspaceHandler)

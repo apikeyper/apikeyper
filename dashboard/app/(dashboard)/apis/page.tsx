@@ -35,14 +35,21 @@ export default async function ApisPage() {
   const apis = await getApis();
 
   if (!apis) {
-    return <div>No APIs found</div>;
+    return <div className="flex flex-col">
+      <div className="p-5">
+        <CreateNewApiSheet />
+      </div>
+      <p className="text-center text-lg">
+        Create a new API to get started
+      </p>
+    </div>;
   }
 
 
   return (
     <main className="flex flex-col space-y-5">
       <div>
-      <CreateNewApiSheet />
+        <CreateNewApiSheet />
       </div>
       <div className="flex flex-row space-x-2">
         {apis.map((api) => (
