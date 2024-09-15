@@ -1,6 +1,6 @@
 import { validateRequest } from '@/app/auth/validate';
 import { getNewRootKey } from '@/lib/apiKeyService/rootKey';
-import { createDefaultWorkspaceForUser } from '@/lib/apiKeyService/workspace';
+import { GetOrCreateDefaultWorkspaceForUser } from '@/lib/apiKeyService/workspace';
 import { NextRequest, NextResponse } from 'next/server';
 import { sealData } from 'iron-session';
 import { cookies } from 'next/headers';
@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 export async function GET(_: NextRequest) {
   const { user, session } = await validateRequest();
 
-  const workspaceId = await createDefaultWorkspaceForUser(user!.githubId, session!.id);
+  const workspaceId = await GetOrCreateDefaultWorkspaceForUser(user!.githubId, session!.id);
 
   const rootKey = await getNewRootKey(workspaceId, `${user!.id}-default-root-key`);
     const encryptedRootKey = await sealData(rootKey, {

@@ -11,6 +11,10 @@ type Service interface {
 	// Health returns a map of health status information.
 	Health() map[string]string
 
+	// User
+	CreateUser(user *User) (string, error)
+	FetchUserByGithubId(githubId string) (*User, error)
+
 	// Workspace
 	CreateWorkspace(workspace *Workspace) (uuid.UUID, error)
 	FetchWorkspaceById(workspaceId uuid.UUID) (*Workspace, error)

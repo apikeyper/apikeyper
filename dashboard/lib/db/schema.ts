@@ -1,8 +1,6 @@
-import { pgSchema, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
-export const authSchema = pgSchema("auth");
-
-export const userTable = authSchema.table("user", {
+export const userTable = pgTable("users", {
 	id: text("id").primaryKey(),
 	username: text("username")
 		.notNull(),
@@ -15,7 +13,7 @@ export const userTable = authSchema.table("user", {
 );
 export const UserType = userTable.$inferSelect
 
-export const sessionTable = authSchema.table("session", {
+export const sessionTable = pgTable("sessions", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()

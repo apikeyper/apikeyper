@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 	"log/slog"
 	"os"
@@ -20,12 +19,8 @@ var (
 )
 
 type DbConfig struct {
-	dbHost string
-	dbUrl  string
-	dbUser string
-	dbPass string
-	dbName string
-	dbPort string
+	dbUrl          string
+	dbDebugLogging bool
 }
 
 func ParseDbUrl(dbConfig *DbConfig) string {
@@ -33,22 +28,22 @@ func ParseDbUrl(dbConfig *DbConfig) string {
 		return dbConfig.dbUrl
 	}
 
-	return fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/London",
-		dbConfig.dbHost,
-		dbConfig.dbUser,
-		dbConfig.dbPass,
-		dbConfig.dbName,
-		dbConfig.dbPort,
-	)
+	panic("DATABASE_URL is not set")
 }
 
 func GetGormDb() *gorm.DB {
 	dbConfig := GetDbConfig()
-
 	dsn := ParseDbUrl(dbConfig)
+
+	var logLevel logger.LogLevel
+	if dbConfig.dbDebugLogging {
+		logLevel = logger.Info
+	} else {
+		logLevel = logger.Error
+	}
+
 	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Error),
+		Logger: logger.Default.LogMode(logLevel),
 	})
 
 	if err != nil {
@@ -66,7 +61,8 @@ func SetupDb() *gorm.DB {
 
 	// Migrate the schema
 	db.AutoMigrate(
-		// &User{},
+		&User{},
+		&Session{},
 		&Workspace{},
 		&RootKey{},
 		&Api{},
@@ -90,20 +86,12 @@ func GetDbConfig() *DbConfig {
 	}
 
 	var (
-		dbUrl  = os.Getenv("DATABASE_URL")
-		dbHost = os.Getenv("DB_HOST")
-		dbUser = os.Getenv("DB_USER")
-		dbPass = os.Getenv("DB_PASS")
-		dbName = os.Getenv("DB_NAME")
-		dbPort = os.Getenv("DB_PORT")
+		dbUrl          = os.Getenv("DATABASE_URL")
+		dbDebugLogging = os.Getenv("DATABASE_DEBUG_LOGGING") == "true"
 	)
 
 	return &DbConfig{
-		dbHost: dbHost,
-		dbUrl:  dbUrl,
-		dbUser: dbUser,
-		dbPass: dbPass,
-		dbName: dbName,
-		dbPort: dbPort,
+		dbUrl:          dbUrl,
+		dbDebugLogging: dbDebugLogging,
 	}
 }

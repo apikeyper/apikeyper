@@ -1,12 +1,12 @@
 {
-  "id": "f6d8b964-5f32-407f-ac6b-67ccff7a8292",
+  "id": "af51183d-e872-4468-a3c4-d1fc93864477",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "auth.session": {
+    "public.session": {
       "name": "session",
-      "schema": "auth",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -29,11 +29,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_user_id_user_id_fk": {
-          "name": "session_user_id_user_id_fk",
+        "session_user_id_users_id_fk": {
+          "name": "session_user_id_users_id_fk",
           "tableFrom": "session",
-          "tableTo": "user",
-          "schemaTo": "auth",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -47,9 +46,9 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "auth.user": {
-      "name": "user",
-      "schema": "auth",
+    "public.users": {
+      "name": "users",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -93,9 +92,7 @@
     }
   },
   "enums": {},
-  "schemas": {
-    "auth": "auth"
-  },
+  "schemas": {},
   "sequences": {},
   "_meta": {
     "columns": {},
