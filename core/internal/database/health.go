@@ -23,6 +23,12 @@ func (s *service) Health() map[string]string {
 	dsn := ParseDbUrl(dbConfig)
 
 	db, _ := sql.Open("pgx", dsn)
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	db.SetMaxIdleConns(10)
+	// SetMaxOpenConns sets the maximum number of open connections to the database.
+	db.SetMaxOpenConns(100)
+	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+	db.SetConnMaxLifetime(time.Hour)
 
 	err := db.PingContext(ctx)
 	if err != nil {

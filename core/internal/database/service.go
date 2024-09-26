@@ -1,6 +1,8 @@
 package database
 
 import (
+	"log/slog"
+
 	"github.com/google/uuid"
 	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/gorm"
@@ -49,13 +51,19 @@ type service struct {
 func New() Service {
 	// Reuse Connection
 	if dbService != nil {
+		slog.Info("Using existing db service")
 		return dbService
 	}
 
-	db := SetupDb()
+	if dbInstance == nil {
+		slog.Info("Creating new db instance")
+		dbInstance = SetupDb()
+	} else {
+		slog.Info("Using existing db instance")
+	}
 
 	dbService = &service{
-		db: db,
+		db: dbInstance,
 	}
 	return dbService
 }

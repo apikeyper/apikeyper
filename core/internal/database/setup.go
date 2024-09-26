@@ -1,9 +1,11 @@
 package database
 
 import (
+	"database/sql"
 	"log"
 	"log/slog"
 	"os"
+	"time"
 
 	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/driver/postgres"
@@ -14,8 +16,9 @@ import (
 )
 
 var (
-	dbService *service
-	dbConfig  *DbConfig
+	dbInstance *gorm.DB
+	dbService  *service
+	dbConfig   *DbConfig
 )
 
 type DbConfig struct {
@@ -42,17 +45,30 @@ func GetGormDb() *gorm.DB {
 		logLevel = logger.Error
 	}
 
-	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{
-		Logger: logger.Default.LogMode(logLevel),
-	})
+	sqlDB, _ := sql.Open("pgx", dsn)
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	sqlDB.SetMaxIdleConns(10)
+	// SetMaxOpenConns sets the maximum number of open connections to the database.
+	sqlDB.SetMaxOpenConns(100)
+	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	if err != nil {
+	var dbConnErr error
+	dbInstance, dbConnErr = gorm.Open(
+		postgres.New(postgres.Config{
+			Conn: sqlDB,
+		}),
+		&gorm.Config{
+			Logger: logger.Default.LogMode(logLevel),
+		})
+
+	if dbConnErr != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
-		log.Fatal(err)
+		log.Fatal(dbConnErr)
 	}
 
-	return db
+	return dbInstance
 }
 
 func SetupDb() *gorm.DB {

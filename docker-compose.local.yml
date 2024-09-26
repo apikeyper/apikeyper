@@ -1,4 +1,3 @@
-version: "3"
 services:
   apikeyper-db:
     image: postgres:latest

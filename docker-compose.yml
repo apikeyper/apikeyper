@@ -1,4 +1,3 @@
-version: "3"
 services:
   apikeyper-db:
     image: postgres:latest
@@ -28,6 +27,8 @@ services:
     image: redis:latest
     container_name: apikeyper-redis
     restart: always
+    # ports:
+    #   - "6379:6379"
 
   apikeyper-api:
     build:
