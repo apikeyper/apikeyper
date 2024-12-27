@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -39,9 +39,7 @@ export function CopyToClipboardButton({
         className,
       )}
       onClick={() => {
-        copyToClipboardWithMeta(
-          value,
-        );
+        copyToClipboardWithMeta(value);
         setHasCopied(true);
         toast({
           title: "Copied to clipboard",
@@ -60,10 +58,20 @@ export function CopyToClipboardButton({
   );
 }
 
-
-export function ButtonWithCopy({ text, className }: { text: string, className?: string }) {
+export function ButtonWithCopy({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) {
   return (
-    <div className={cn("flex w-max flex-row items-center space-x-2 rounded bg-zinc-900 p-2 ", className)}>
+    <div
+      className={cn(
+        "flex w-max flex-row items-center space-x-2 rounded bg-zinc-900 p-2 ",
+        className,
+      )}
+    >
       <p>{text}</p>
       <CopyToClipboardButton value={text} />
     </div>

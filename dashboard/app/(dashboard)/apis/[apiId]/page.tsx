@@ -11,7 +11,6 @@ async function getApiKeys(getApiKeysProps: GetApiKeysProps) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const rootKey = await getRootKey();
 
-
   const url = `${baseUrl}/api/${getApiKeysProps.apiId}/keys`;
 
   const response = await fetch(url, {
@@ -47,7 +46,6 @@ export default async function apiIdPage({
       </main>
     );
   }
-
 
   return (
     <main className="flex">

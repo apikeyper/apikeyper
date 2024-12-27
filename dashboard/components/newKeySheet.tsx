@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 
 import {
   Form,
@@ -20,10 +20,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { useParams } from 'next/navigation'
-import { useToast } from "@/components/ui/use-toast"
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useParams } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   keyName: z.string().min(2, {
@@ -31,7 +37,7 @@ const formSchema = z.object({
   }),
   prefix: z.string().optional(),
   permissions: z.string().optional(),
-})
+});
 
 export function CreateNewKeySheet() {
   const apiId = useParams().apiId;
@@ -44,7 +50,7 @@ export function CreateNewKeySheet() {
       prefix: "",
       permissions: "Admin",
     },
-  })
+  });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
       title: "Creating key...",
@@ -52,9 +58,9 @@ export function CreateNewKeySheet() {
     });
 
     const resp = await fetch(`/api/createApiKey`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         apiId: apiId,
@@ -62,11 +68,11 @@ export function CreateNewKeySheet() {
         prefix: values.prefix,
         permissions: values.permissions,
       }),
-    })
+    });
 
     if (resp.ok) {
-      window.location.reload()
-      return
+      window.location.reload();
+      return;
     } else {
       toast({
         title: "Failed to create key. Please try again.",
@@ -79,17 +85,24 @@ export function CreateNewKeySheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="bg-zinc-400 dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-700">Create key</Button>
+        <Button className="bg-zinc-400 text-black hover:bg-zinc-700 dark:bg-zinc-900 dark:text-white">
+          Create key
+        </Button>
       </SheetTrigger>
-      <SheetContent className="w-3/4 bg-zinc-400 dark:bg-zinc-800 text-black dark:text-white">
+      <SheetContent className="w-3/4 bg-zinc-400 text-black dark:bg-zinc-800 dark:text-white">
         <SheetHeader>
-          <SheetTitle className="text-black dark:text-white">Create a new API key</SheetTitle>
+          <SheetTitle className="text-black dark:text-white">
+            Create a new API key
+          </SheetTitle>
           <SheetDescription>
             Define the properties of your new API key.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-white">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 text-white"
+          >
             <FormField
               control={form.control}
               name="keyName"
@@ -97,7 +110,10 @@ export function CreateNewKeySheet() {
                 <FormItem>
                   <FormLabel>Key name</FormLabel>
                   <FormControl>
-                    <Input {...field} className="text-black dark:bg-zinc-900 dark:text-white" />
+                    <Input
+                      {...field}
+                      className="text-black dark:bg-zinc-900 dark:text-white"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your key display name.
@@ -113,7 +129,10 @@ export function CreateNewKeySheet() {
                 <FormItem>
                   <FormLabel>Prefix</FormLabel>
                   <FormControl>
-                    <Input {...field} className="text-black dark:bg-zinc-900 dark:text-white" />
+                    <Input
+                      {...field}
+                      className="text-black dark:bg-zinc-900 dark:text-white"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is the prefix for the key
@@ -149,10 +168,15 @@ export function CreateNewKeySheet() {
                 </FormItem>
               )}
             />
-            <Button className="text-black dark:text-white bg-zinc-400 dark:bg-zinc-900" type="submit">Submit</Button>
+            <Button
+              className="bg-zinc-400 text-black dark:bg-zinc-900 dark:text-white"
+              type="submit"
+            >
+              Submit
+            </Button>
           </form>
         </Form>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

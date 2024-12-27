@@ -14,7 +14,6 @@ interface CreateApiKeyProps {
   };
 }
 
-
 export async function createApiKey(createApiKeyProps: CreateApiKeyProps) {
   const rootKey = await getRootKey();
   const response = await fetch(`${apiKeyperUrl}/apiKey`, {
@@ -24,13 +23,13 @@ export async function createApiKey(createApiKeyProps: CreateApiKeyProps) {
       Authorization: `Bearer ${rootKey}`,
     },
     body: JSON.stringify({
-      "apiId": createApiKeyProps.apiId,
-      "name": createApiKeyProps.keyName,
-      "prefix": createApiKeyProps.prefix,
-      "permissions": createApiKeyProps.permissions,
-      "rateLimit": createApiKeyProps.rateLimitConfig,
+      apiId: createApiKeyProps.apiId,
+      name: createApiKeyProps.keyName,
+      prefix: createApiKeyProps.prefix,
+      permissions: createApiKeyProps.permissions,
+      rateLimit: createApiKeyProps.rateLimitConfig,
     }),
-  })
+  });
 
   const data = await response.json();
 

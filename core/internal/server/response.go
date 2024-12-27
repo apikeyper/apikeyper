@@ -77,3 +77,11 @@ type FetchApiKeyUsageResponse struct {
 	Records  []database.ApiKeyUsageCount `json:"records"`
 	Count    int                         `json:"count"`
 }
+
+type ApiKeysActivityResponse struct {
+	KeyId     uuid.UUID `json:"keyId"`
+	KeyName   string    `json:"keyName"`
+	ApiId     uuid.UUID `json:"apiId"`
+	Usage     string    `json:"usage"`
+	Timestamp time.Time `json:"timestamp"`
+}

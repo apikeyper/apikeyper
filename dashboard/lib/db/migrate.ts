@@ -1,4 +1,4 @@
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -13,15 +13,14 @@ async function main() {
   await pool.end();
 }
 
-
-main().then(
-  () => {
-    console.log('Migration successful')
-    pool.end()
-    process.exit(0)
-  }
-).catch((e) => {
-  console.error('Migration failed')
-  console.error(e)
-  process.exit(1)
-})
+main()
+  .then(() => {
+    console.log("Migration successful");
+    pool.end();
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.error("Migration failed");
+    console.error(e);
+    process.exit(1);
+  });

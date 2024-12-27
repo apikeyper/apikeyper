@@ -41,9 +41,10 @@ export function Sidebar() {
   ];
 
   return (
-    <div className={`bg fixed flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 p-4
-                  text-black dark:text-white bg-zinc-200 border-r-2 border-r-black/25
-                  dark:bg-zinc-800 dark:border-r-white/25`}
+    <div
+      className={`bg fixed flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r-2
+                  border-r-black/25 bg-zinc-200 p-4 text-black dark:border-r-white/25
+                  dark:bg-zinc-800 dark:text-white`}
     >
       <div className="grow">
         {menuList.map((menu, index) => (
@@ -51,9 +52,11 @@ export function Sidebar() {
             <p>{menu.group}</p>
             {menu.items.map((item, i) => (
               <Link className="py-2" key={i} href={item.link}>
-                <div className={`flex flex-row hover:text-zinc-400 rounded bg-zinc-300 p-3
-                                dark:bg-zinc-900
-                                hover:ring-1 hover:ring-black/25`}>
+                <div
+                  className={`flex flex-row rounded bg-zinc-300 p-3 hover:text-zinc-400
+                                hover:ring-1
+                                hover:ring-black/25 dark:bg-zinc-900`}
+                >
                   {item.icon}
                   <p className="px-2">{item.text}</p>
                 </div>
@@ -64,18 +67,17 @@ export function Sidebar() {
       </div>
       <div>
         <Button
-          className="bg-zinc-300 text-black w-full hover:text-white dark:bg-zinc-900 dark:text-white dark:hover:bg-black/25"
+          className="w-full bg-zinc-300 text-black hover:text-white dark:bg-zinc-900 dark:text-white dark:hover:bg-black/25"
           onClick={async () => {
             const resp = await fetch("/logout", {
               headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
               },
-            })
+            });
             if (resp.ok) {
               router.replace("/");
             }
-
           }}
         >
           Sign Out
