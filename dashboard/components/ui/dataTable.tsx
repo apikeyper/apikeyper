@@ -81,7 +81,12 @@ export const columns: ColumnDef<ApiKeys>[] = [
     header: "Key id",
     cell: ({ row }) => {
       const apiKeyId = row.getValue("apiKeyId") as string;
-      return <ButtonWithCopy className="bg-zinc-400 dark:bg-zinc-900" text={apiKeyId} />
+      return (
+        <ButtonWithCopy
+          className="bg-zinc-400 dark:bg-zinc-900"
+          text={apiKeyId}
+        />
+      );
     },
   },
   {
@@ -129,7 +134,10 @@ export const columns: ColumnDef<ApiKeys>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 dark:hover:bg-zinc-900">
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 dark:hover:bg-zinc-900"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -137,11 +145,7 @@ export const columns: ColumnDef<ApiKeys>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  key.apiKeyId,
-                )
-              }
+              onClick={() => navigator.clipboard.writeText(key.apiKeyId)}
             >
               Copy key id
             </DropdownMenuItem>
@@ -189,10 +193,13 @@ export function DataTable(dataTableProps: DataTableProps) {
 
   return (
     <div className="w-full text-black dark:text-white">
-      <div className="flex flex-row space-x-2 b">
-        {
-          data[0] && <ButtonWithCopy className="bg-zinc-400 dark:bg-zinc-900 text-black dark:text-white" text={data[0].apiId} />
-        }
+      <div className="b flex flex-row space-x-2">
+        {data[0] && (
+          <ButtonWithCopy
+            className="bg-zinc-400 text-black dark:bg-zinc-900 dark:text-white"
+            text={data[0].apiId}
+          />
+        )}
         <CreateNewKeySheet />
       </div>
       <div className="flex items-center py-4">
@@ -208,7 +215,10 @@ export function DataTable(dataTableProps: DataTableProps) {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto bg-zinc-400 dark:hover:bg-zinc-900 dark:bg-zinc-900">
+            <Button
+              variant="outline"
+              className="ml-auto bg-zinc-400 dark:bg-zinc-900 dark:hover:bg-zinc-900"
+            >
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -240,13 +250,16 @@ export function DataTable(dataTableProps: DataTableProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead className="text-black dark:text-white border-b border-b-black/25 dark:border-white/25" key={header.id}>
+                    <TableHead
+                      className="border-b border-b-black/25 text-black dark:border-white/25 dark:text-white"
+                      key={header.id}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   );
                 })}

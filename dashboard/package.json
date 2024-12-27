@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fmt": "prettier . --write",
+    "fmt:check": "prettier . --check"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -21,6 +23,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "@tanstack/react-table": "^8.14.0",
     "@workos-inc/authkit-nextjs": "^0.4.2",
     "@workos-inc/node": "^6.7.0",

@@ -10,8 +10,6 @@ export default async function ApisLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <div className="flex items-start justify-between">
       <main className="grid h-full w-full pl-[300px]">

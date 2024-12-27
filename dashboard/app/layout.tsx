@@ -15,12 +15,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} bg-zinc-200 dark:bg-zinc-800`}
-      >
+      <body className={`${inter.className} bg-zinc-200 dark:bg-zinc-800`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

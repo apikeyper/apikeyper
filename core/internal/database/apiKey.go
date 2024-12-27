@@ -135,3 +135,27 @@ func (s *service) FetchApiKeyUsage(apiKeyId uuid.UUID, interval string) (*[]ApiK
 
 	return &apiKeyActivityRecords, nil
 }
+
+func (s *service) ListAllApiKeysActivity(workspaceId uuid.UUID) (*[]ActivityRecord, error) {
+	var activities []ActivityRecord
+
+	result := s.db.Table("api_key_activities as aka").
+		Select(`
+            aka.api_key_id,
+						ak.name,
+            ak.api_id,
+            aka.usage,
+            aka.created_at
+        `).
+		Joins("JOIN api_keys as ak ON aka.api_key_id = ak.id").
+		Joins("JOIN apis ON ak.api_id = apis.id").
+		Where("apis.workspace_id = ?", workspaceId).
+		Order("aka.created_at DESC").
+		Find(&activities)
+
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to list api key activities for workspace %s: %w", workspaceId, result.Error)
+	}
+
+	return &activities, nil
+}

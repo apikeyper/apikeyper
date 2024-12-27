@@ -1,9 +1,9 @@
-'use client'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useFormState } from "react-hook-form"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useFormState } from "react-hook-form";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 
 import {
   Form,
@@ -21,14 +21,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { useToast } from "@/components/ui/use-toast"
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   apiName: z.string().min(2, {
     message: "Api name must be at least 2 characters.",
   }),
-})
+});
 
 export function CreateNewApiSheet() {
   const { toast } = useToast();
@@ -38,7 +38,7 @@ export function CreateNewApiSheet() {
     defaultValues: {
       apiName: "",
     },
-  })
+  });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
       title: "Creating API...",
@@ -46,18 +46,18 @@ export function CreateNewApiSheet() {
     });
 
     const resp = await fetch(`/api/createApi`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         apiName: values.apiName,
       }),
-    })
+    });
 
     if (resp.ok) {
-      window.location.reload()
-      return
+      window.location.reload();
+      return;
     } else {
       toast({
         title: "Failed to create api. Please try again.",
@@ -70,19 +70,24 @@ export function CreateNewApiSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="bg-zinc-400 dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-700">Create API</Button>
+        <Button className="bg-zinc-400 text-black hover:bg-zinc-700 dark:bg-zinc-900 dark:text-white">
+          Create API
+        </Button>
       </SheetTrigger>
-      <SheetContent className="w-3/4 bg-zinc-400 dark:bg-zinc-800 text-black dark:text-white">
+      <SheetContent className="w-3/4 bg-zinc-400 text-black dark:bg-zinc-800 dark:text-white">
         <SheetHeader>
-          <SheetTitle className="text-black dark:text-white">Create a new API</SheetTitle>
+          <SheetTitle className="text-black dark:text-white">
+            Create a new API
+          </SheetTitle>
           <SheetDescription>
             Define the properties of your new API.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 text-white">
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 text-white"
+          >
             <FormField
               control={form.control}
               name="apiName"
@@ -90,7 +95,10 @@ export function CreateNewApiSheet() {
                 <FormItem>
                   <FormLabel>API name</FormLabel>
                   <FormControl>
-                    <Input {...field} className="text-black dark:bg-zinc-900 dark:text-white" />
+                    <Input
+                      {...field}
+                      className="text-black dark:bg-zinc-900 dark:text-white"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your api display name.
@@ -100,10 +108,15 @@ export function CreateNewApiSheet() {
               )}
             />
 
-            <Button className="text-black dark:text-white bg-zinc-400 dark:bg-zinc-900" type="submit">Submit</Button>
+            <Button
+              className="bg-zinc-400 text-black dark:bg-zinc-900 dark:text-white"
+              type="submit"
+            >
+              Submit
+            </Button>
           </form>
         </Form>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

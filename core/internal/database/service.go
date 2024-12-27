@@ -42,6 +42,7 @@ type Service interface {
 	// ApiKeyUsage
 	LogApiKeyUsage(apiKeyUsage *ApiKeyActivity) (uuid.UUID, error)
 	FetchApiKeyUsage(apiKeyId uuid.UUID, interval string) (*[]ApiKeyUsageCount, error)
+	ListAllApiKeysActivity(workspaceId uuid.UUID) (*[]ActivityRecord, error)
 }
 
 type service struct {

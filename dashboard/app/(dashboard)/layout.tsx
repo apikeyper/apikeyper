@@ -15,11 +15,8 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
-    <main
-      className={`${inter.className} bg-zinc-200 dark:bg-zinc-800`}
-    >
+    <main className={`${inter.className} bg-zinc-200 dark:bg-zinc-800`}>
       <Sidebar />
       <Header />
       {children}

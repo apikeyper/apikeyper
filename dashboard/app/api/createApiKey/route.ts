@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createApiKey } from '@/lib/apiKeyService/apiKey';
+import { NextRequest, NextResponse } from "next/server";
+import { createApiKey } from "@/lib/apiKeyService/apiKey";
 
 export async function POST(request: NextRequest) {
   const req = await request.json();
