@@ -19,7 +19,13 @@ export default async function DashboardLayout({
     <main className={`${inter.className} bg-zinc-200 dark:bg-zinc-800`}>
       <Sidebar />
       <Header />
-      {children}
+      <div className="flex items-start justify-between">
+        <main className="grid h-full w-full pl-[300px]">
+          <div className="p-8">
+            {children}
+          </div>
+        </main>
+      </div>
     </main>
   );
 }

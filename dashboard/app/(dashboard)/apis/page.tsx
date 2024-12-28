@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { getRootKey } from "@/app/auth/auth.client";
 import { CreateNewApiSheet } from "@/components/newApiSheet";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Apis",
+  description: "Api Keys as a Service",
+};
 
 interface Api {
   apiId: string;

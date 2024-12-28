@@ -1,6 +1,12 @@
 import { getRootKey } from "@/app/auth/auth.client";
 import { ActivityTable } from "@/components/activityTable";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Activity logs",
+  description: "Api Keys as a Service",
+};
 
 interface ActivityRecord {
   keyId: string;
@@ -34,7 +40,7 @@ export default async function ActivityPage() {
     <div className="container mx-auto py-6">
       <Card>
         <CardHeader>
-          <h2 className="text-2xl font-bold">Activity</h2>
+          <h1 className="text-2xl font-bold">Activity</h1>
         </CardHeader>
         <CardContent>
           <ActivityTable activities={activities} />

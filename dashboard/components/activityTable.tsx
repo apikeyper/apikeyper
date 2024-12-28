@@ -82,7 +82,7 @@ export function ActivityTable({ activities }: ActivityTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Key Id</TableHead>
+            <TableHead>Key</TableHead>
             <TableHead>Api Id</TableHead>
             <TableHead>Usage</TableHead>
             <TableHead>Time</TableHead>

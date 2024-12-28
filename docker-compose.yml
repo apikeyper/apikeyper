@@ -27,8 +27,8 @@ services:
     image: redis:latest
     container_name: apikeyper-redis
     restart: always
-    # ports:
-    #   - "6379:6379"
+    ports:
+      - "6379:6379"
 
   apikeyper-api:
     build:
@@ -57,23 +57,22 @@ services:
       apikeyper-db:
         condition: service_healthy
 
-  apikeyper-dashboard:
-    build:
-      context: dashboard
-      dockerfile: Dockerfile.Web
-    container_name: apikeyper-dashboard
-    environment:
-      - PORT=3000
-      - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
-      - DATABASE_URL=${DATABASE_URL}
-      - ROOTKEY_PASSWORD=${SECRET_SIGNING_KEY}
-      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-    ports:
-      - 3000:3000
-    depends_on:
-      - apikeyper-api
-
+  # apikeyper-dashboard:
+  #   build:
+  #     context: dashboard
+  #     dockerfile: Dockerfile.Web
+  #   container_name: apikeyper-dashboard
+  #   environment:
+  #     - PORT=3000
+  #     - NEXT_PUBLIC_API_URL=http://apikeyper-api:8080
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - ROOTKEY_PASSWORD=${SECRET_SIGNING_KEY}
+  #     - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+  #     - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - apikeyper-api
 
 volumes:
   dbdata:
