@@ -1,0 +1,6 @@
+# Exclude TSX files from language detection
+*.ts linguist-detectable=true
+*.tsx linguist-detectable=false
+
+# Or mark Go as the main language
+*.go linguist-detectable=true
